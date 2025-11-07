@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+
+    <!-- HERO PROFIL KARTASI -->
+    <div class="profile-hero-card">
+        <div class="hero-bg"></div>
+        <div class="avatar-wrapper">
+            <div class="avatar">
+                {{ request.user.username|slice:":1"|upper }}
+            </div>
+        </div>
+        <div class="profile-header-content">
+            <h1 class="profile-name">
+                {{ request.user.get_full_name|default:request.user.username }}
+            </h1>
+            
+        </div>
+    </div>
+
+    <!-- MA'LUMOTLAR GRID -->
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="content">
+                <p class="label">Email</p>
+                <p class="value">{{ request.user.email|default:"Yo‘q" }}</p>
+            </div>
+        </div>
+
+        {% if request.user.phone %}
+        <div class="info-card">
+            <div class="icon phone">
+                <i class="fas fa-phone"></i>
+            </div>
+            <div class="content">
+                <p class="label">Telefon</p>
+                <p class="value">{{ request.user.phone }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="info-card">
+            <div class="icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="content">
+                <p class="label">A'zolik sanasi</p>
+                <p class="value">{{ request.user.date_joined|date:"d M Y" }}</p>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="content">
+                <p class="label">Oxirgi kirish</p>
+                <p class="value">
+                    {% if request.user.last_login %}
+                        {{ request.user.last_login|date:"d M Y, H:i" }}
+                    {% else %}
+                        Hali yo‘q
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOZLAMALAR -->
+    <div class="settings-section">
+        <h2 class="section-title">
+            <i class="fas fa-cogs"></i> Tizim sozlamalari
+        </h2>
+
+        <div class="settings-grid">
+            <a href="{% url 'profile_update' %}" class="setting-card">
+                <div class="icon indigo">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <div class="content">
+                    <h3>Profilni tahrirlash</h3>
+                    <p>Ism, familiya, telefon, parol</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+
+            <a href="about" class="setting-card">
+                <div class="icon blue">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="content">
+                    <h3>Loyiha haqida</h3>
+                    <p>PulHisobi.uz — moliyaviy nazorat</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+
+            <a href="budget_about" class="setting-card new">
+                <div class="icon purple">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="content">
+                    <h3>Budjet yaratish</h3>
+                    <p>Tez orada yangi funksiya</p>
+                </div>
+                <span class="badge">YANGI</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- CHIQISH -->
+    <div class="action-buttons">
+        <a href="{% url 'logout' %}" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Tizimdan chiqish
+        </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="profile-footer">
+        <p>© 2025 <strong>PulHisobi.uz</strong> — Sizning moliyaviy yordamchingiz</p>
+        <p class="text-sm">Xavfsiz • Tez • Ishonchli</p>
+    </footer>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Avatar rangini tasodifiy qilish
+    document.addEventListener('DOMContentLoaded', () => {
+        const avatars = document.querySelectorAll('.avatar');
+        const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'];
+        avatars.forEach(avatar => {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            avatar.style.background = `linear-gradient(135deg, ${randomColor}, ${lightenColor(randomColor, 20)})`;
+        });
+    });
+
+    function lightenColor(color, percent) {
+        const num = parseInt(color.replace("#", ""), 16),
+              amt = Math.round(2.55 * percent),
+              R = (num >> 16) + amt,
+              G = (num >> 8 & 0x00FF) + amt,
+              B = (num & 0x0000FF) + amt;
+        return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + 
+               (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + 
+               (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ilova haqida{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="about-container">
+
+    <!-- HERO -->
+    <div class="about-hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <i class="fas fa-wallet"></i>
+                PulHisobi.uz
+            </h1>
+            <p class="hero-subtitle">
+                Shaxsiy va oilaviy moliyangizni oson boshqaring. Har bir tranzaksiyani kuzatib boring, 
+                hisobotlarni tahlil qiling va kelajak uchun reja tuzing.
+            </p>
+            <div class="hero-tags">
+                <span class="tag">Versiya 2.1</span>
+                <span class="tag">100% Xavfsiz</span>
+                <span class="tag">Tez va Ishonchli</span>
+                <span class="tag">O‘zbek tilida</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- XUSUSIYATLAR -->
+    <section class="features-section">
+        <h2 class="section-title">Nima uchun bizni tanlaysiz?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon chart"><i class="fas fa-chart-line"></i></div>
+                <h3>To'liq Hisobotlar</h3>
+                <p>Oylik, yillik va maxsus davrlar bo'yicha batafsil moliyaviy tahlillar. Grafiklar, foizlar, trendlar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon expense"><i class="fas fa-receipt"></i></div>
+                <h3>Smart Kategoriyalar</h3>
+                <p>Har bir xarajatingizni avtomatik ravishda to'g'ri kategoriyaga joylashtiring. Yangi kategoriyalar qo‘shing.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon mobile"><i class="fas fa-mobile-alt"></i></div>
+                <h3>Mobil Moslashuv</h3>
+                <p>Istalgan qurilmada — telefon, planshet yoki kompyuterda ishlang. Har doim sinxron.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon security"><i class="fas fa-shield-alt"></i></div>
+                <h3>Maksimal Xavfsizlik</h3>
+                <p>Barcha ma'lumotlar shifrlanadi. Parollar xavfsiz saqlanadi. Hech kim ko‘rmaydi.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATISTIKA -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card"><div class="number">500+</div><p>Faol foydalanuvchi</p></div>
+            <div class="stat-card"><div class="number">10K+</div><p>Tranzaksiyalar</p></div>
+            <div class="stat-card"><div class="number">24/7</div><p>Ish vaqti</p></div>
+            <div class="stat-card"><div class="number">100%</div><p>Xavfsizlik</p></div>
+        </div>
+    </section>
+
+    <!-- JAMOA -->
+    <section class="team-section">
+        <h2 class="section-title">Bizning Jamoa</h2>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="avatar">A</div>
+                <h3>Shohrux Ibrohimov</h3>
+                <p class="role">Asoschi & Dasturchi</p>
+                <p class="bio">Django, Python, AI — 5+ yillik tajriba</p>
+            </div>
+            <div class="team-card">
+                <div class="avatar">S</div>
+                <h3>Sarvar Azizov</h3>
+                <p class="role">Web Dizayner</p>
+                <p class="bio">Figma, Tailwind, UI/UX — 3+ yillik tajriba</p>
+            </div>
+            <div class="team-card">
+                <div class="avatar">N</div>
+                <h3>Nodira Shukurova</h3>
+                <p class="role">Moliya maslahatchisi</p>
+                <p class="bio">Soliq, buxgalteriya — 8+ yillik tajriba</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEZ ORADA -->
+    <section class="coming-soon-section">
+        <div class="coming-soon-card">
+            <h3><i class="fas fa-rocket"></i> Tez orada yangi funksiyalar!</h3>
+            <div class="tags">
+                <span class="tag purple">Budjet rejalashtirish</span>
+                <span class="tag pink">Avtomatik import</span>
+                <span class="tag indigo">PDF hisobotlar</span>
+                <span class="tag green">Mobil ilova</span>
+                <span class="tag orange">AI tahlil</span>
+                <span class="tag blue">Valyuta konvertatsiyasi</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="about-footer">
+        <p class="copyright">© 2025 <strong>PulHisobi.uz</strong> — Barcha huquqlar himoyalangan.</p>
+        <p class="contact">
+            Savollar bo‘lsa: <span class="phone">+998 50 755 10 23</span> yoki
+            <a href="https://t.me/shoxrux_ibrohimov" target="_blank" rel="noopener noreferrer" class="telegram">
+                <i class="fab fa-telegram-plane"></i> Telegram orqali
+            </a>
+        </p>
+    </footer>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .stat-card, .team-card').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
+{% endblock %}

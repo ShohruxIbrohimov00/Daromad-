@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PulHisobi{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+
+    <!-- Bizning CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-100 antialiased font-sans">
+
+<div class="app-container">
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        PULHISOBI.UZ
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="content-wrapper">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer — Mobil + Kompyuter -->
+    <footer class="app-footer">
+        <div class="footer-inner">
+
+            <div class="footer-nav">
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-home"></i>
+                    <span>Bosh sahifa</span>
+                </a>
+                <a href="{% url 'recurring_list' %}" class="nav-link {% if request.resolver_match.url_name == 'recurring_list' %}active{% endif %}">
+                    <i class="fas fa-repeat"></i>
+                    <span>Takroriy</span>
+                </a>
+                <div class="fab-container">
+                    <a href="{% url 'add_transaction' %}" class="fab-button">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <a href="{% url 'add_category' %}" class="nav-link {% if request.resolver_match.url_name == 'add_category' %}active{% endif %}">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Kategoriya</span>
+                </a>
+                <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profil</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Flatpickr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/uz.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

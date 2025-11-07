@@ -1,0 +1,275 @@
+/* ========================================= */
+/* PROFILE UPDATE — KOMPYUTER UCHUN KENG     */
+/* 2 ustun, katta avatar, hover, gradient    */
+/* ========================================= */
+
+.update-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 3rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* KENG KARTA */
+.update-wide-card {
+    background: white;
+    border-radius: 3rem;
+    overflow: hidden;
+    box-shadow: 0 35px 80px -5px rgba(0, 0, 0, 0.18);
+    max-width: 1000px;
+    width: 100%;
+    border: 3px solid #e2e8f0;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 0;
+}
+
+/* HEADER */
+.card-header {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    padding: 4rem 3rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 3rem 0 0 3rem;
+    overflow: hidden;
+}
+
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,100 L0,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: cover;
+    opacity: 0.3;
+}
+
+.avatar-large {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: white;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5.5rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    border: 10px solid white;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    transition: all 0.5s ease;
+    z-index: 10;
+}
+
+.avatar-large:hover {
+    transform: scale(1.08) rotate(5deg);
+    box-shadow: 0 35px 80px rgba(0,0,0,0.4);
+}
+
+.header-content {
+    text-align: center;
+    z-index: 10;
+}
+
+.main-title {
+    font-size: 2.75rem;
+    font-weight: 900;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    opacity: 0.95;
+    margin: 0;
+}
+
+/* BODY */
+.card-body {
+    padding: 4rem 3rem;
+    background: white;
+    border-radius: 0 3rem 3rem 0;
+}
+
+.messages-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.msg {
+    padding: 1.25rem 1.75rem;
+    border-radius: 1.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+.msg.success { background: #ecfdf5; color: #059669; border-left: 6px solid #10b981; }
+.msg.error { background: #fef2f2; color: #dc2626; border-left: 6px solid #ef4444; }
+
+/* FORMA GRID */
+.update-form-wide {
+    display: grid;
+    gap: 2.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.15rem;
+    transition: color 0.3s;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1.5rem 1.75rem;
+    border-radius: 1.75rem;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 1.15rem;
+    font-weight: 500;
+    transition: all 0.4s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.25);
+}
+
+.form-group.focused label {
+    color: #6366f1;
+}
+
+.help-text {
+    font-size: 0.9375rem;
+    color: #64748b;
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.help-text code {
+    background: #e2e8f0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    font-size: 0.875rem;
+}
+
+.error {
+    font-size: 0.9375rem;
+    color: #dc2626;
+    margin-top: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* TUGMALAR */
+.action-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 1.5rem 3rem;
+    border-radius: 1.75rem;
+    font-weight: 800;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: all 0.4s ease;
+    min-width: 200px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(99, 102, 241, 0.5);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #475569;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+/* MOBIL */
+@media (max-width: 992px) {
+    .update-wide-card {
+        grid-template-columns: 1fr;
+        border-radius: 2.5rem;
+    }
+    .card-header {
+        border-radius: 2.5rem 2.5rem 0 0;
+        padding: 3rem 2rem;
+    }
+    .avatar-large { width: 140px; height: 140px; font-size: 4rem; }
+    .main-title { font-size: 2.25rem; }
+    .card-body { padding: 3rem 2rem; border-radius: 0 0 2.5rem 2.5rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full-width { grid-column: span 1; }
+    .action-buttons { flex-direction: column; }
+    .btn-primary, .btn-secondary { padding: 1.25rem 2rem; font-size: 1.1rem; }
+}
+
+@media (max-width: 480px) {
+    .update-container { padding: 1.5rem; }
+    .main-title { font-size: 1.875rem; }
+}

@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Kategoriyalar Boshqaruvi{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/category_management.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="category-container">
+
+    <!-- HERO SARLAVHA -->
+    <div class="hero-card">
+        <h1>
+            <i class="fas fa-tags"></i>
+            Kategoriyalar Boshqaruvi
+        </h1>
+        <p>Daromad va xarajatlarni tartibga solish uchun kategoriyalarni yarating va tahrirlang</p>
+    </div>
+
+    <!-- ASOSIY TABLAR -->
+    <div class="main-tabs">
+        <button data-tab="list" class="tab-btn active">
+            <i class="fas fa-list-alt"></i> Ro‘yxat
+        </button>
+        <button data-tab="add" class="tab-btn">
+            <i class="fas fa-plus-square"></i> Yangi Qo‘shish
+        </button>
+    </div>
+
+    <!-- PANELLAR -->
+    <div class="panels">
+
+        <!-- RO‘YXAT PANELI -->
+        <div id="panel-list" class="panel active">
+            <div class="type-tabs">
+                <button data-type="EXPENSE" class="type-btn active">
+                    <i class="fas fa-minus-circle"></i> Xarajat
+                    <span class="count" id="expense-count">0</span>
+                </button>
+                <button data-type="INCOME" class="type-btn">
+                    <i class="fas fa-plus-circle"></i> Daromad
+                    <span class="count" id="income-count">0</span>
+                </button>
+            </div>
+
+            <div id="category-list" class="category-grid">
+                <!-- JS bilan to‘ldiriladi -->
+            </div>
+        </div>
+
+        <!-- QO‘SHISH PANELI -->
+        <div id="panel-add" class="panel">
+            <div class="add-form-card">
+                <h2>
+                    <i class="fas fa-plus-circle"></i> Yangi Kategoriya Yaratish
+                </h2>
+
+                <form method="post" class="add-form">
+                    {% csrf_token %}
+
+                    <!-- NOMI -->
+                    <div class="form-group">
+                        <label><i class="fas fa-edit"></i> Nomi</label>
+                        <input type="text" 
+                               name="name" 
+                               placeholder="Masalan: Non, Maosh, Ijara" 
+                               required 
+                               maxlength="100"
+                               value="{{ request.POST.name|default:'' }}">
+                    </div>
+
+                    <!-- TURI -->
+                    <div class="form-group">
+                        <label><i class="fas fa-random"></i> Turi</label>
+                        <select name="type" required onchange="updateParentOptions()">
+                            <option value="">-- Tanlang --</option>
+                            {% for value, label in type_choices %}
+                                <option value="{{ value }}" {% if request.POST.type == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- YUQORI KATEGORIYA -->
+                    <div class="form-group" id="parent-group" style="display: none;">
+                        <label><i class="fas fa-level-up-alt"></i> Yuqori kategoriya (ixtiyoriy)</label>
+                        <select name="parent">
+                            <option value="">-- Hech qaysi (Asosiy Kategoriya) --</option>
+                            {% for cat in parent_categories %}
+                                <option value="{{ cat.id }}" 
+                                        data-type="{{ cat.type }}"
+                                        {% if request.POST.parent == cat.id|stringformat:"s" %}selected{% endif %}
+                                        class="parent-option parent-{{ cat.type }}">
+                                    {{ cat.name }} {% if cat.parent %} → {{ cat.parent.name }}{% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- FAOL -->
+                    <div class="form-group checkbox">
+                        <input type="checkbox" 
+                               name="is_active" 
+                               id="is_active" 
+                               {% if request.POST.is_active %}checked{% endif %}>
+                        <label for="is_active"><i class="fas fa-check-circle"></i> Faol</label>
+                    </div>
+
+                    <!-- SAQLASH -->
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i> Saqlash
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- HIDDEN DATA -->
+    <div id="category-data" data-categories='{{ all_categories_json | safe }}' style="display: none;"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/category_management.js' %}"></script>
+<script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Type switching
+    document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCategories();
+        });
+    });
+
+    // Parent options update
+    window.updateParentOptions = function() {
+        const type = document.querySelector('[name="type"]').value;
+        const parentGroup = document.getElementById('parent-group');
+        const parentSelect = parentGroup.querySelector('select');
+        if (type) {
+            parentGroup.style.display = 'block';
+            parentSelect.querySelectorAll('.parent-option').forEach(opt => {
+                opt.style.display = opt.dataset.type === type ? 'block' : 'none';
+            });
+        } else {
+            parentGroup.style.display = 'none';
+        }
+    };
+
+    // Render categories
+    window.renderCategories = function() {
+        const type = document.querySelector('.type-btn.active').dataset.type;
+        const container = document.getElementById('category-list');
+        const data = JSON.parse(document.getElementById('category-data').dataset.categories);
+        const categories = data.filter(c => c.type === type);
+
+        document.getElementById(type.toLowerCase() + '-count').textContent = categories.length;
+
+        container.innerHTML = categories.length ? '' : `
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>Hozircha ${type === 'EXPENSE' ? 'xarajat' : 'daromad'} kategoriyalari yo‘q</p>
+            </div>`;
+
+        categories.forEach(cat => {
+            const card = document.createElement('div');
+            card.className = `category-card ${cat.type.toLowerCase()}-card`;
+            card.innerHTML = `
+                <div class="category-info ${cat.type.toLowerCase()}-info">
+                    <h3><i class="fas fa-tag"></i> ${cat.name}</h3>
+                    <div class="category-meta">
+                        ${cat.parent ? `<span class="parent-path"><i class="fas fa-level-up-alt"></i> ${cat.parent.name}</span>` : ''}
+                        <span class="global-badge">${cat.is_active ? 'Faol' : 'Faolsiz'}</span>
+                    </div>
+                </div>
+                <div class="category-actions">
+                    <form method="post" action="{% url 'category_delete' 0 %}".replace('0', cat.id) class="delete-form">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn" title="O‘chirish">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    };
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCategories();
+        updateParentOptions();
+    });
+</script>
+{% endblock %}

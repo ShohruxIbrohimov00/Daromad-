@@ -1,0 +1,74 @@
+{% load custom_filters %}
+
+{% if all_transactions %}
+    <div class="space-y-3">
+        {% for transaction in all_transactions %}
+            <div class="transaction-card 
+                        {% if transaction.category.type == 'INCOME' %}income-card{% else %}expense-card{% endif %} 
+                        p-4 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 
+                        {% if transaction.category.type == 'INCOME' %}border-green-500{% else %}border-red-500{% endif %} 
+                        bg-white flex justify-between items-center gap-4">
+                
+                <!-- Chap qism: Ikon + Ma'lumot -->
+                <div class="flex items-center gap-3 flex-1">
+                    <!-- Kategoriya turi ikonasi -->
+                    <div class="icon-circle w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-md
+                                {% if transaction.category.type == 'INCOME' %}bg-gradient-to-br from-emerald-100 to-green-100 text-emerald-700{% else %}bg-gradient-to-br from-rose-100 to-red-100 text-rose-700{% endif %}">
+                        {{ transaction.category.type|slice:":1" }}
+                    </div>
+
+                    <!-- Kategoriya nomi + sana -->
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-800">
+                            {% if transaction.category.parent %}
+                                <span class="text-indigo-600">{{ transaction.category.parent.name }}</span>
+                                <span class="text-gray-500">/</span>
+                                <span class="text-gray-900">{{ transaction.category.name }}</span>
+                            {% else %}
+                                <span class="text-gray-900">{{ transaction.category.name }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                            <i class="fas fa-calendar-alt"></i> {{ transaction.date|date:"d M, Y" }}
+                            {% if transaction.account %}
+                                <span class="mx-1">•</span>
+                                <i class="fas fa-wallet"></i> {{ transaction.account.name }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- O'ng qism: Miqdor + Izoh -->
+                <div class="text-right">
+                    <p class="text-2xl font-extrabold 
+                               {% if transaction.category.type == 'INCOME' %}text-emerald-600{% else %}text-rose-600{% endif %}">
+                        {% if transaction.category.type == 'INCOME' %}+{% else %}–{% endif %}{{ transaction.amount|currency }}
+                    </p>
+                    {% if transaction.description %}
+                        <p class="text-xs text-gray-400 mt-1 italic max-w-32 truncate">
+                            “{{ transaction.description|truncatechars:20 }}”
+                        </p>
+                    {% else %}
+                        <p class="text-xs text-gray-300 mt-1">Izohsiz</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state p-10 text-center bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
+        <i class="fas fa-inbox text-5xl text-gray-300 mb-4 block"></i>
+        <p class="text-lg font-semibold text-gray-600">
+            {% if request.GET.type == 'INCOME' %}
+                Bu oyda daromad tranzaksiyalari yo‘q
+            {% elif request.GET.type == 'EXPENSE' %}
+                Bu oyda xarajat tranzaksiyalari yo‘q
+            {% else %}
+                Tanlangan davrda tranzaksiyalar mavjud emas
+            {% endif %}
+        </p>
+        <p class="text-sm text-gray-500 mt-2">
+            Yangi tranzaksiya qo‘shish uchun “+” tugmasidan foydalaning
+        </p>
+    </div>
+{% endif %}

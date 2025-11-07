@@ -1,0 +1,552 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %} <!-- custom_filters yuklandi -->
+
+{% block title %}Yangi Tranzaksiya{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Tablar */
+    .tab-container {
+        background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .tab-button {
+        font-weight: 700;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.25rem;
+    }
+    .tab-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .tab-button:hover::before { opacity: 1; }
+    .tab-button.active {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    #tab-expense.active { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+    #tab-income.active { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+
+     /* HERO — TO‘LIQ TO‘G‘IRLANGAN */
+    .hero-card {
+        background: white;
+        border-radius: 2.5rem;
+        padding: 2.75rem 3rem;
+        text-align: center;
+        box-shadow: 0 28px 60px -5px rgba(99, 102, 241, 0.25);
+        border: 3px solid #e0e7ff;
+        transition: all 0.4s ease;
+        margin-bottom: 3rem;
+    }
+
+    .hero-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 38px 75px -5px rgba(99, 102, 241, 0.35);
+        border-color: #6366f1;
+    }
+
+    .hero-card h1 {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 1rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        line-height: 1;
+    }
+
+    .hero-card h1 i {
+        font-size: 1.5rem;     /* Ikonka kattalashtirildi */
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-card p {
+        color: #475569;
+        font-weight: 600;
+        font-size: 1.35rem;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    /* Miqdor */
+    .amount-input-card {
+        background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+        border: 3px solid #6366f1;
+        border-radius: 1.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.2);
+        transition: all 0.3s;
+    }
+    .amount-input-card:focus-within {
+        transform: scale(1.02);
+        box-shadow: 0 20px 40px -5px rgba(99, 102, 241, 0.3);
+        border-color: #4f46e5;
+    }
+    #id_amount_display {
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: #1e293b;
+        background: transparent;
+        border: none;
+        outline: none;
+        text-align: center;
+        width: 100%;
+        font-variant-numeric: tabular-nums;
+    }
+    #id_amount_display::placeholder { 
+        color: #94a3b8; 
+        font-weight: 600; 
+        font-size: 2.5rem;
+    }
+
+    /* Kategoriya kartochkasi */
+    .category-card {
+        background: white;
+        border-radius: 1.25rem;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        min-height: 90px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .category-card:hover {
+        transform: translateY(-6px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(99, 102, 241, 0.2);
+        z-index: 10;
+    }
+    .category-card.selected {
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        border: 2px solid #6366f1;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3), 0 15px 30px rgba(99, 102, 241, 0.25);
+    }
+    .category-card i {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+    .category-card span {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    /* Subkategoriyalar */
+    #subcategories-panel {
+        background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 1.25rem;
+        border: 2px dashed #c7d2fe;
+        animation: slideDown 0.4s ease;
+    }
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Sana */
+    .date-input-wrapper {
+        position: relative;
+    }
+    #id_date {
+        padding-right: 3rem;
+        font-weight: 600;
+        border: 2px solid #e2e8f0;
+        border-radius: 1rem;
+        transition: all 0.2s;
+    }
+    #id_date:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .date-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        pointer-events: none;
+    }
+
+    /* Izoh */
+    #id_description {
+        border-radius: 1rem;
+        border: 2px solid #e2e8f0;
+        padding: 1rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+    #id_description:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Saqlash tugmasi */
+    #submit-button {
+        font-size: 1.125rem;
+        font-weight: 800;
+        border-radius: 1.25rem;
+        padding: 1rem;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    #submit-button:not(:disabled) {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: white;
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+    #submit-button:not(:disabled):hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(99, 102, 241, 0.4);
+    }
+    #submit-button:disabled {
+        background: #cbd5e1;
+        color: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    /* Yangi kategoriya */
+    .add-category-btn {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        border-radius: 1rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 8px 15px rgba(139, 92, 246, 0.3);
+        transition: all 0.3s;
+    }
+    .add-category-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Loading */
+    .loading-spinner {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #6366f1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 0.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* RESPONSIVE — 2–3 QATOR */
+    .category-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 768px) {
+        .category-grid { grid-template-columns: repeat(6, 1fr); } /* 2 qator */
+    }
+    @media (min-width: 1024px) {
+        .category-grid { grid-template-columns: repeat(9, 1fr); } /* 3 qator */
+    }
+    @media (max-width: 640px) {
+        .category-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        .category-card { padding: 0.75rem; min-height: 80px; }
+        .category-card i { font-size: 1.5rem; }
+        .category-card span { font-size: 0.75rem; }
+        #id_amount_display { font-size: 3rem; }
+    }
+    @media (max-width: 480px) {
+        .category-grid { grid-template-columns: 1fr; }
+        #id_amount_display { font-size: 2.5rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-4 sm:p-6">
+
+    <!-- HERO -->
+    <div class="hero-card"">
+        <h1>
+            <i class="fas fa-plus-circle"> Yangi Tranzaksiya</i>
+            
+        </h1>
+        <p>Daromad yoki xarajatingizni tez va oson kiriting</p>
+    </div>
+
+    <!-- TABLAR -->
+    <div class="tab-container mb-8 p-1">
+        <div class="grid grid-cols-2 gap-1">
+            <button id="tab-expense" data-type="EXPENSE"
+                    class="tab-button py-4 rounded-xl flex items-center justify-center active">
+                <i class="fas fa-minus-circle mr-2 text-xl"></i>
+                <span>Xarajat</span>
+            </button>
+            <button id="tab-income" data-type="INCOME"
+                    class="tab-button py-4 rounded-xl flex items-center justify-center">
+                <i class="fas fa-plus-circle mr-2 text-xl"></i>
+                <span>Daromad</span>
+            </button>
+        </div>
+    </div>
+
+    <form id="transaction-form" method="post" action="{% url 'add_transaction' %}" class="space-y-7">
+        {% csrf_token %}
+        
+        <input type="hidden" name="transaction_type" id="id_transaction_type" value="{{ initial_type|default:'EXPENSE' }}">
+        <input type="hidden" name="category" id="id_category_id" required>
+
+        <!-- MIQDOR -->
+        <div class="amount-input-card">
+            <label for="id_amount_display" class="block text-sm font-bold text-indigo-700 text-center mb-3">
+                <i class="fas fa-coins mr-1"></i> Miqdor (so‘m)
+            </label>
+            <input type="text" 
+                   id="id_amount_display" 
+                   placeholder="0"
+                   inputmode="numeric"
+                   autocomplete="off"
+                   class="block w-full text-center">
+            <input type="hidden" id="id_amount" name="amount" required>
+        </div>
+
+        <!-- KATEGORIYALAR -->
+        <div id="category-selection-area" class="bg-white p-5 rounded-xl shadow-lg border border-gray-100">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-tags text-indigo-600 mr-2"></i>
+                Kategoriya tanlang
+            </h2>
+
+            <div id="parent-categories-container" class="category-grid">
+                <p id="loading-message" class="col-span-full text-center text-gray-500 py-6">
+                    <span class="loading-spinner"></span> Kategoriyalar yuklanmoqda...
+                </p>
+            </div>
+
+            <div id="subcategories-panel" class="hidden mt-5 p-5 border-2 border-dashed border-indigo-200 bg-indigo-50 rounded-xl">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-indigo-200">
+                    <h3 class="font-bold text-indigo-700 flex items-center">
+                        <i id="parent-icon" class="mr-2"></i>
+                        <span id="parent-name-display"></span>
+                    </h3>
+                    <button type="button" id="back-to-parents"
+                            class="text-sm font-medium text-indigo-600 hover:text-indigo-800 flex items-center">
+                        <i class="fas fa-arrow-left mr-1"></i> Orqaga
+                    </button>
+                </div>
+                <div id="subcategories-container" class="category-grid"></div>
+            </div>
+        </div>
+
+        <!-- SANA -->
+        <div>
+            <label for="id_date" class="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+                <i class="fas fa-calendar-alt text-indigo-600 mr-2"></i> Sana
+            </label>
+            <div class="date-input-wrapper">
+                <input type="date" id="id_date" name="date" required
+                       class="w-full py-3 px-4 text-lg font-medium">
+            </div>
+        </div>
+
+        <!-- IZOH -->
+        <div>
+            <label for="id_description" class="block text-sm font-bold text-gray-700 mb-2">
+                <i class="fas fa-comment-dots text-indigo-600 mr-2"></i> Izoh (ixtiyoriy)
+            </label>
+            <textarea id="id_description" name="description" rows="3"
+                      class="w-full resize-none"
+                      placeholder="Masalan: “Oziq-ovqat”, “Ish haqi”..."></textarea>
+        </div>
+
+        <!-- SAQLASH -->
+        <button type="submit" id="submit-button" disabled
+                class="w-full py-4 text-white font-extrabold text-lg rounded-xl shadow-lg transition duration-300 cursor-not-allowed">
+            <i class="fas fa-save mr-2"></i>
+            Saqlash (Kategoriya + Miqdor)
+        </button>
+    </form>
+
+    <!-- YANGI KATEGORIYA -->
+    <div class="mt-8 text-center">
+        <p class="text-sm text-gray-600 mb-3">Kerakli kategoriya topilmadi?</p>
+        <a href="{% url 'add_category' %}" class="add-category-btn inline-flex items-center">
+            <i class="fas fa-plus-square mr-2"></i>
+            Yangi Kategoriya Qo‘shish
+        </a>
+    </div>
+
+    <div id="category-data" data-categories='{{ categories_json | safe }}' style="display: none;"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // === KATEGORIYALAR ===
+    let allCategories = [];
+    try {
+        const raw = document.getElementById('category-data')?.dataset.categories || '';
+        const cleaned = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        allCategories = cleaned ? JSON.parse(cleaned) : [];
+    } catch (e) {
+        console.error("Kategoriyalar yuklanmadi:", e);
+        document.getElementById('loading-message').innerHTML = `
+            <p class="col-span-full text-red-600 font-medium">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Kategoriyalar yuklanmadi.
+            </p>`;
+    }
+
+    // === DOM ===
+    const expenseTab = document.getElementById('tab-expense');
+    const incomeTab = document.getElementById('tab-income');
+    const typeInput = document.getElementById('id_transaction_type');
+    const parentContainer = document.getElementById('parent-categories-container');
+    const subPanel = document.getElementById('subcategories-panel');
+    const subContainer = document.getElementById('subcategories-container');
+    const parentNameDisplay = document.getElementById('parent-name-display');
+    const parentIcon = document.getElementById('parent-icon');
+    const backBtn = document.getElementById('back-to-parents');
+    const categoryIdInput = document.getElementById('id_category_id');
+    const submitBtn = document.getElementById('submit-button');
+    const amountDisplay = document.getElementById('id_amount_display');
+    const amountHidden = document.getElementById('id_amount');
+    const dateInput = document.getElementById('id_date');
+
+    let currentType = typeInput.value;
+    let selectedCategoryId = null;
+    let currentParentId = null;
+
+    // === FORMATLASH ===
+    function formatNumber(value) {
+        const num = value.replace(/\D/g, '');
+        if (!num) return '';
+        return num.split('').reverse().join('').replace(/(\d{3})(?=\d)/g, '$1 ').split('').reverse().join('');
+    }
+
+    function parseNumber(formatted) {
+        return formatted.replace(/\s/g, '');
+    }
+
+    amountDisplay.addEventListener('input', function(e) {
+        const formatted = formatNumber(e.target.value);
+        e.target.value = formatted;
+        amountHidden.value = parseNumber(formatted);
+        updateSubmitButton();
+    });
+
+    // === TAB ===
+    function setActiveTab(type) {
+        currentType = type;
+        typeInput.value = type;
+        [expenseTab, incomeTab].forEach(t => t.classList.remove('active'));
+        if (type === 'EXPENSE') expenseTab.classList.add('active');
+        else incomeTab.classList.add('active');
+        resetCategorySelection();
+        renderCategories(type); // HAR SAFAR YANGI KATEGORIYALAR
+    }
+
+    expenseTab.addEventListener('click', () => setActiveTab('EXPENSE'));
+    incomeTab.addEventListener('click', () => setActiveTab('INCOME'));
+
+    // === KATEGORIYA ===
+    function resetCategorySelection() {
+        selectedCategoryId = null;
+        categoryIdInput.value = '';
+        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('selected'));
+        updateSubmitButton();
+    }
+
+    function renderCategories(type, parentId = null) {
+        const container = parentId ? subContainer : parentContainer;
+        container.innerHTML = '';
+
+        const filtered = allCategories.filter(c =>
+            c.type === type && (parentId === null ? !c.parent_id : c.parent_id === parentId)
+        );
+
+        if (parentId === null) {
+            subPanel.classList.add('hidden');
+        } else {
+            subPanel.classList.remove('hidden');
+            const parent = allCategories.find(c => c.id === parentId);
+            parentNameDisplay.textContent = parent?.name || '';
+            parentIcon.className = parent?.icon || 'fas fa-folder';
+        }
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-4">Hech narsa topilmadi.</p>`;
+            return;
+        }
+
+        filtered.forEach(cat => {
+            const isParent = allCategories.some(c => c.parent_id === cat.id);
+            const card = document.createElement('div');
+            card.className = 'category-card';
+            card.dataset.id = cat.id;
+            card.innerHTML = `
+                <i class="${cat.icon || 'fas fa-tag'} ${type === 'EXPENSE' ? 'text-red-500' : 'text-green-500'}"></i>
+                <span>${cat.name}</span>
+                ${isParent ? '<i class="fas fa-angle-right absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>' : ''}
+            `;
+            card.onclick = () => {
+                if (isParent) {
+                    currentParentId = cat.id;
+                    renderCategories(type, cat.id);
+                    resetCategorySelection();
+                } else {
+                    document.querySelectorAll('.category-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedCategoryId = cat.id;
+                    categoryIdInput.value = cat.id;
+                    updateSubmitButton(cat.name);
+                }
+            };
+            container.appendChild(card);
+        });
+    }
+
+    function updateSubmitButton(name = null) {
+        const hasAmount = amountHidden.value && parseInt(amountHidden.value) > 0;
+        if (selectedCategoryId && hasAmount) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="fas fa-save mr-2"></i> ${name || 'Saqlash'}`;
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fas fa-save mr-2"></i> Saqlash (Kategoriya + Miqdor)`;
+        }
+    }
+
+    backBtn.onclick = () => {
+        currentParentId = null;
+        renderCategories(currentType);
+        resetCategorySelection();
+    };
+
+    // === YUKLASHDA ===
+    window.onload = () => {
+        setActiveTab(currentType); // DAROMAD KATEGORIYALARI CHIQADI
+        const today = new Date().toISOString().split('T')[0];
+        if (!dateInput.value) dateInput.value = today;
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,272 @@
+/* ========================================= */
+/* DASHBOARD — RESPONSIVE STYLES             */
+/* ========================================= */
+
+.dashboard-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+}
+
+/* OY TANLAGICH */
+.date-selector {
+    background: linear-gradient(145deg, #f8fafc 0%, #eef2ff 100%);
+    border: 2px solid #c7d2fe;
+    border-radius: 1.5rem;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.date-selector:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.2);
+    border-color: #6366f1;
+}
+
+.date-display-text {
+    cursor: pointer;
+    border-bottom: 2px dashed #6366f1;
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+    font-weight: 800;
+    color: #4f46e5;
+    font-size: 1.125rem;
+}
+
+.date-display-text:hover {
+    border-bottom-color: #4338ca;
+}
+
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: #6366f1;
+    font-weight: bold;
+    transition: all 0.2s;
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
+    border: none;
+    cursor: pointer;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background: #6366f1;
+    color: white;
+    transform: scale(1.1);
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* BALANS KARTA */
+.balance-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-top: 5px solid #6366f1;
+    border-radius: 1.75rem;
+    padding: 1.75rem;
+    text-align: center;
+    box-shadow: 0 20px 40px -5px rgba(99, 102, 241, 0.2);
+    transition: all 0.3s;
+    margin-bottom: 2rem;
+}
+
+.balance-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 50px -5px rgba(99, 102, 241, 0.3);
+}
+
+.balance-amount {
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #10b981, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.negative-amount {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* FILTR TABLARI */
+.filter-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filter-tab {
+    background: white;
+    border-radius: 1.25rem;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 2px solid transparent;
+}
+
+.filter-tab:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+}
+
+.income-tab { border-color: #bbf7d0; }
+.expense-tab { border-color: #fecaca; }
+
+.active-filter {
+    border-width: 3px;
+    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.25);
+    transform: translateY(-2px);
+}
+
+.income-active {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-color: #22c55e;
+}
+
+.expense-active {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border-color: #ef4444;
+}
+
+.filter-tab .amount {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-top: 0.25rem;
+}
+
+/* SARLAVHA */
+.section-title {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: #1e293b;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-title i {
+    color: #6366f1;
+}
+
+/* LIST CONTAINER */
+#transaction-list-container {
+    background: white;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
+    min-height: 240px;
+    border: 1px solid #e2e8f0;
+}
+
+/* LOADING */
+.loading-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9375rem;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+.error-msg {
+    padding: 1.5rem;
+    text-align: center;
+    color: #ef4444;
+    background: #fee2e2;
+    border-radius: 1rem;
+    margin: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+    .date-selector {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+    .nav-btn {
+        width: 36px;
+        height: 36px;
+    }
+    .balance-amount {
+        font-size: 2.75rem;
+    }
+    .filter-tab .amount {
+        font-size: 1.375rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .dashboard-container {
+        max-width: 800px;
+    }
+    .balance-amount {
+        font-size: 4rem;
+    }
+}
+
+/* ========================================= */
+/* CUSTOM.CSS — Umumiy nav-link (mobil)      */
+/* ========================================= */
+
+.nav-link {
+    @apply flex flex-col items-center justify-center p-3 transition-all duration-200 text-xs font-medium;
+    color: #64748b;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: #6366f1;
+}
+
+.nav-link.active {
+    color: #6366f1;
+}
+
+.nav-link i {
+    @apply text-lg mb-1 transition-transform duration-200;
+}
+
+.nav-link.active i {
+    transform: scale(1.15);
+}

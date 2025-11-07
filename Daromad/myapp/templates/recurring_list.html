@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Takrorlanuvchi tranzaksiyalar{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/recurring_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="recurring-container">
+
+    <!-- HERO + YANGI QO‘SHISH -->
+    <div class="hero-section">
+        <div class="hero-card">
+            <h1>
+                <i class="fas fa-sync-alt"></i>
+                Takrorlanuvchi Tranzaksiyalar
+            </h1>
+            <p>Har oy avtomatik qo‘shiladigan moliyaviy yozuvlar</p>
+        </div>
+        <a href="{% url 'add_recurring' %}" class="add-recurring-btn">
+            <i class="fas fa-plus"></i>
+            <span>Yangi Qo‘shish</span>
+        </a>
+    </div>
+
+    <!-- GRID: DAROMAD + XARAJAT -->
+    <div class="recurring-grid">
+
+        <!-- DAROMADLAR -->
+        <div class="recurring-column income-column">
+            <div class="section-header">
+                <i class="fas fa-arrow-up"></i>
+                Takrorlanuvchi Daromadlar
+                <span class="badge">{{ recurring_incomes|length }}</span>
+            </div>
+
+            <div class="recurring-list">
+                {% for item in recurring_incomes %}
+                <div class="recurring-item">
+                    <div class="item-left">
+                        <div class="amount income-amount">
+                            +{{ item.amount|floatformat:0|intcomma }} so‘m
+                        </div>
+                        <div class="category-name">{{ item.category.name }}</div>
+                        <div class="meta-info">
+                            <i class="fas fa-calendar-day"></i> Har oy {{ item.day_of_month }}-kuni
+                            {% if item.start_date %}
+                                <span class="tag"><i class="fas fa-play"></i> {{ item.start_date|date:"d M Y" }}</span>
+                            {% endif %}
+                            {% if item.end_date %}
+                                <span class="tag"><i class="fas fa-stop"></i> {{ item.end_date|date:"d M Y" }}</span>
+                            {% endif %}
+                        </div>
+                        {% if item.note %}
+                        <div class="note">“{{ item.note }}”</div>
+                        {% endif %}
+                        <div class="last-executed">
+                            <i class="fas fa-history"></i> Oxirgi: {{ item.last_executed|date:"d M Y"|default:"Hali yo‘q" }}
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <form method="post" action="{% url 'delete_recurring' item.id %}" class="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn" title="O‘chirish">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Hozircha takrorlanuvchi daromadlar yo‘q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- XARAJATLAR -->
+        <div class="recurring-column expense-column">
+            <div class="section-header">
+                <i class="fas fa-arrow-down"></i>
+                Takrorlanuvchi Xarajatlar
+                <span class="badge">{{ recurring_expenses|length }}</span>
+            </div>
+
+            <div class="recurring-list">
+                {% for item in recurring_expenses %}
+                <div class="recurring-item">
+                    <div class="item-left">
+                        <div class="amount expense-amount">
+                            –{{ item.amount|floatformat:0|intcomma }} so‘m
+                        </div>
+                        <div class="category-name">{{ item.category.name }}</div>
+                        <div class="meta-info">
+                            <i class="fas fa-calendar-day"></i> Har oy {{ item.day_of_month }}-kuni
+                            {% if item.start_date %}
+                                <span class="tag"><i class="fas fa-play"></i> {{ item.start_date|date:"d M Y" }}</span>
+                            {% endif %}
+                            {% if item.end_date %}
+                                <span class="tag"><i class="fas fa-stop"></i> {{ item.end_date|date:"d M Y" }}</span>
+                            {% endif %}
+                        </div>
+                        {% if item.note %}
+                        <div class="note">“{{ item.note }}”</div>
+                        {% endif %}
+                        <div class="last-executed">
+                            <i class="fas fa-history"></i> Oxirgi: {{ item.last_executed|date:"d M Y"|default:"Hali yo‘q" }}
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <form method="post" action="{% url 'delete_recurring' item.id %}" class="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn" title="O‘chirish">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Hozircha takrorlanuvchi xarajatlar yo‘q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.recurring-item').forEach(card => {
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %}

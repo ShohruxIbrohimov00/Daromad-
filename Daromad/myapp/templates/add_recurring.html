@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block title %}Yangi Takrorlanuvchi Yozuv{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/add_recurring.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="add-recurring-container">
+
+    <!-- HERO -->
+    <div class="hero-card">
+        <h1>
+            <i class="fas fa-sync-alt"></i>
+            Yangi Takrorlanuvchi Yozuv
+        </h1>
+        <p>Har oy avtomatik qo‘shiladigan daromad yoki xarajat</p>
+    </div>
+
+    <!-- FORMA -->
+    <form method="post" class="recurring-form">
+        {% csrf_token %}
+
+        <div class="form-grid">
+
+            <!-- KATEGORIYA -->
+            <div class="form-card category-card">
+                <label class="form-label">
+                    <i class="fas fa-tag"></i> Kategoriya
+                </label>
+                <div class="select-wrapper">
+                    {{ form.category }}
+                    <i class="fas fa-chevron-down select-icon"></i>
+                </div>
+                {% if form.category.errors %}
+                    <p class="error-text">{{ form.category.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- MIQDOR -->
+            <div class="form-card amount-card">
+                <label class="form-label">
+                    <i class="fas fa-coins"></i> Miqdor (so‘m)
+                </label>
+                <div class="amount-input-group">
+                    <input type="text"
+                           name="amount"
+                           id="amount-input"
+                           value="{% if form.amount.value %}{{ form.amount.value|currency:'' }}{% endif %}"
+                           placeholder="0"
+                           inputmode="numeric"
+                           autocomplete="off"
+                           required>
+                    <span class="amount-suffix">so‘m</span>
+                </div>
+                <p class="input-hint">Masalan: 1 234 567</p>
+                {% if form.amount.errors %}
+                    <p class="error-text">{{ form.amount.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- OY KUNI -->
+            <div class="form-card day-card">
+                <label class="form-label">
+                    <i class="fas fa-calendar-day"></i> Har oyning nechanchi kuni?
+                </label>
+                <div class="day-input-group">
+                    <input type="number"
+                           name="day_of_month"
+                           id="id_day_of_month"
+                           min="1" max="30"
+                           value="{{ form.day_of_month.value|default:'1' }}"
+                           required>
+                    <span class="day-suffix">-kuni</span>
+                </div>
+                <p class="input-hint">1 dan 30 gacha</p>
+                {% if form.day_of_month.errors %}
+                    <p class="error-text">{{ form.day_of_month.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- BOSHLANISH -->
+            <div class="form-card date-card">
+                <label class="form-label">
+                    <i class="fas fa-play"></i> Boshlanish sanasi
+                </label>
+                {{ form.start_date }}
+                {% if form.start_date.errors %}
+                    <p class="error-text">{{ form.start_date.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- TUGASH -->
+            <div class="form-card date-card">
+                <label class="form-label">
+                    <i class="fas fa-stop"></i> Tugash sanasi (ixtiyoriy)
+                </label>
+                {{ form.end_date }}
+                <p class="input-hint">Kiritilmasa — cheksiz</p>
+                {% if form.end_date.errors %}
+                    <p class="error-text">{{ form.end_date.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- IZOH -->
+            <div class="form-card note-card">
+                <label class="form-label">
+                    <i class="fas fa-sticky-note"></i> Izoh (ixtiyoriy)
+                </label>
+                {{ form.note }}
+                {% if form.note.errors %}
+                    <p class="error-text">{{ form.note.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- TUGMALAR -->
+        <div class="btn-group">
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i>
+                Saqlash
+            </button>
+            <a href="{% url 'recurring_list' %}" class="cancel-btn">
+                <i class="fas fa-times"></i>
+                Bekor qilish
+            </a>
+        </div>
+    </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('amount-input');
+        if (!amountInput) return;
+
+        // Formatlash
+        amountInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^\d]/g, '');
+            if (!value) {
+                e.target.value = '';
+                return;
+            }
+            e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        });
+
+        // Yuborishdan oldin tozalash
+        amountInput.closest('form').addEventListener('submit', function() {
+            amountInput.value = amountInput.value.replace(/\s/g, '');
+        });
+
+        // Boshlang‘ich format
+        if (amountInput.value) {
+            const num = amountInput.value.replace(/\s/g, '');
+            if (/^\d+$/.test(num)) {
+                amountInput.value = num.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            }
+        }
+
+        // Inputlar stil
+        document.querySelectorAll('input[type="date"]').forEach(el => el.classList.add('date-input'));
+        document.querySelectorAll('select').forEach(el => el.classList.add('category-select'));
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Budjet haqida{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/budget_about.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="budget-container">
+
+    <!-- HERO -->
+    <div class="hero-wide">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <i class="fas fa-chart-pie"></i>
+                Budjet Boshqaruvi
+            </h1>
+            <p class="hero-subtitle">
+                Har bir xarajat kategoriyasi uchun oylik limit belgilang, sarflarni nazorat qiling va ogohlantirishlar oling
+            </p>
+            <div class="coming-soon-badge">
+                <i class="fas fa-clock"></i>
+                Tez orada!
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO GRID -->
+    <div class="info-grid">
+
+        <!-- BUDJET NIMA? -->
+        <div class="info-card large">
+            <div class="card-header">
+                <i class="fas fa-info-circle"></i>
+                <h2>Budjet nima?</h2>
+            </div>
+            <div class="card-body">
+                <p class="definition">
+                    <strong>Budjet</strong> — bu bir oy davomida ma'lum bir <strong>xarajat kategoriyasiga</strong> (<em>Oziq-ovqat, Transport, Kommunal</em>) sarflashingiz mumkin bo'lgan <strong>maksimal miqdor</strong>.
+                </p>
+                <p class="details">
+                    Har oy boshida siz o'zingiz uchun limit belgilaysiz, tizim esa avtomatik ravishda sarflangan summangizni hisoblab, foizlarda ko'rsatadi.
+                </p>
+            </div>
+        </div>
+
+        <!-- QANDAY ISHLAYDI? -->
+        <div class="info-card features">
+            <div class="card-header">
+                <i class="fas fa-cogs"></i>
+                <h2>Qanday ishlaydi?</h2>
+            </div>
+            <div class="card-body">
+                <div class="features-grid">
+                    <div class="feature expense">
+                        <div class="icon"><i class="fas fa-coins"></i></div>
+                        <h4>Xarajat kategoriyasiga limit</h4>
+                        <p>Siz faqat <strong>xarajat</strong> kategoriyalariga budjet qo'yishingiz mumkin.</p>
+                    </div>
+                    <div class="feature budget">
+                        <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h4>Oylik tsikl</h4>
+                        <p>Har bir budjet <strong>1-kun</strong>dan boshlanadi va keyingi oy 1-kunigacha amal qiladi.</p>
+                    </div>
+                    <div class="feature alert">
+                        <div class="icon"><i class="fas fa-bell"></i></div>
+                        <h4>Ogohlantirish chegarasi</h4>
+                        <p>Siz <code>80%</code> sarflanganda ogohlantirish olishingiz mumkin.</p>
+                    </div>
+                    <div class="feature progress">
+                        <div class="icon"><i class="fas fa-chart-line"></i></div>
+                        <h4>Real vaqt hisoblash</h4>
+                        <p>Har bir tranzaksiya qo'shilganda, progress bari avtomatik yangilanadi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MISOL -->
+    <div class="example-section">
+        <div class="example-card">
+            <div class="card-header">
+                <i class="fas fa-lightbulb"></i>
+                <h2>Misol: “Oziq-ovqat” kategoriyasi</h2>
+            </div>
+            <div class="card-body">
+                <div class="budget-limit">
+                    <span class="label">Belgilangan budjet:</span>
+                    <span class="amount">2,000,000 so‘m</span>
+                </div>
+                <div class="timeline">
+                    <div class="day">
+                        <div class="date">10-kun</div>
+                        <div class="spent">1,200,000 so‘m</div>
+                        <div class="progress-bar"><div class="fill" style="width: 60%;"></div></div>
+                        <div class="percent yellow">60%</div>
+                    </div>
+                    <div class="day">
+                        <div class="date">20-kun</div>
+                        <div class="spent">1,600,000 so‘m</div>
+                        <div class="progress-bar"><div class="fill" style="width: 80%;"></div></div>
+                        <div class="percent orange">80% <span class="alert">Ogohlantirish!</span></div>
+                    </div>
+                    <div class="day">
+                        <div class="date">25-kun</div>
+                        <div class="spent">2,100,000 so‘m</div>
+                        <div class="progress-bar"><div class="fill" style="width: 105%;"></div></div>
+                        <div class="percent red">105% <span class="over">Budjet oshdi!</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KELAJAKDA -->
+    <div class="future-section">
+        <h2 class="section-title">
+            <i class="fas fa-rocket"></i>
+            Kelajakdagi imkoniyatlar
+        </h2>
+        <div class="future-grid">
+            <div class="future-card">
+                <div class="icon green"><i class="fas fa-bell"></i></div>
+                <h4>Avtomatik ogohlantirish</h4>
+                <p>Email yoki push-bildirishnoma orqali 80% ga yetganda xabar.</p>
+            </div>
+            <div class="future-card">
+                <div class="icon blue"><i class="fas fa-chart-bar"></i></div>
+                <h4>Grafiklar va statistika</h4>
+                <p>Oylar bo'yicha taqqoslash, trendlar, prognoz.</p>
+            </div>
+            <div class="future-card">
+                <div class="icon purple"><i class="fas fa-copy"></i></div>
+                <h4>Budjetni nusxalash</h4>
+                <p>Oldingi oyning budjetini yangi oyga avto-nusxalash.</p>
+            </div>
+            <div class="future-card">
+                <div class="icon orange"><i class="fas fa-layer-group"></i></div>
+                <h4>Kunlik / Haftalik budjet</h4>
+                <p>Bir kategoriyaga bir nechta budjet (kunlik, haftalik).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-wide">
+        <h3 class="cta-title">
+            <i class="fas fa-bell"></i>
+            Yangilanishlarni kuting!
+        </h3>
+        <p class="cta-text">
+            Budjet funksiyasi hozirda ishlab chiqilmoqda. Yangi versiyada siz to‘liq nazoratni qo‘lga kiritasiz.
+        </p>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.info-card, .example-card, .future-card').forEach(card => {
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %}

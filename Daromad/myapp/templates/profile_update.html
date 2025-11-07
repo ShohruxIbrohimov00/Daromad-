@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profilni tahrirlash{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile_update.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="update-container">
+
+    <!-- KENG HERO FORMA -->
+    <div class="update-wide-card">
+        
+        <!-- HEADER -->
+        <div class="card-header">
+            <div class="avatar-large">
+                {{ request.user.username|slice:":1"|upper }}
+            </div>
+            <div class="header-content">
+                <h1 class="main-title">
+                    <i class="fas fa-user-edit"></i>
+                    Profilni tahrirlash
+                </h1>
+                <p class="subtitle">
+                    Shaxsiy ma'lumotlaringizni yangilang va xavfsiz saqlang
+                </p>
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body">
+
+            <form method="post" class="update-form-wide">
+                {% csrf_token %}
+
+                <div class="form-grid">
+
+                    <!-- ISM -->
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Ism</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <p class="error"><i class="fas fa-exclamation-triangle"></i> {{ form.first_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- FAMILIYA -->
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Familiya</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <p class="error"><i class="fas fa-exclamation-triangle"></i> {{ form.last_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- TELEFON -->
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-phone"></i> Telefon raqami</label>
+                        {{ form.phone }}
+                        <p class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            Masalan: <code>+998901234567</code>
+                        </p>
+                        {% if form.phone.errors %}
+                            <p class="error"><i class="fas fa-exclamation-triangle"></i> {{ form.phone.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <!-- TUGMALAR -->
+                <div class="action-buttons">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Saqlash
+                    </button>
+                    <a href="{% url 'profile' %}" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Orqaga
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Fokus effektlari
+    document.querySelectorAll('.form-group input').forEach(input => {
+        const group = input.parentElement;
+        input.addEventListener('focus', () => group.classList.add('focused'));
+        input.addEventListener('blur', () => {
+            if (!input.value.trim()) group.classList.remove('focused');
+        });
+        if (input.value.trim()) group.classList.add('focused');
+    });
+
+    // Avatar rangi
+    document.addEventListener('DOMContentLoaded', () => {
+        const avatar = document.querySelector('.avatar-large');
+        const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#ef4444'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        avatar.style.background = `linear-gradient(135deg, ${randomColor}, ${lightenColor(randomColor, 25)})`;
+    });
+
+    function lightenColor(color, percent) {
+        const num = parseInt(color.replace("#", ""), 16),
+              amt = Math.round(2.55 * percent),
+              R = (num >> 16) + amt,
+              G = (num >> 8 & 0x00FF) + amt,
+              B = (num & 0x0000FF) + amt;
+        return "#" + (0x1000000 + 
+               (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 + 
+               (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 + 
+               (B < 255 ? (B < 1 ? 0 : B) : 255)).toString(16).slice(1);
+    }
+</script>
+{% endblock %}

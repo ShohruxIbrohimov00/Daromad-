@@ -1,0 +1,316 @@
+
+{% load static %}
+
+{% block title %}Tizimga Kirish{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* === BACKGROUND === */
+    .login-bg {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #c7d2fe 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.5rem;
+    }
+
+    .login-bg::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+        filter: blur(8px) brightness(0.7);
+        z-index: 1;
+        transform: scale(1.05);
+    }
+
+    /* === LOGIN WRAPPER === */
+    .login-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 1400px;
+        gap: 4rem;
+        position: relative;
+        z-index: 10;
+        padding: 2rem;
+    }
+
+    /* === ILLUSTRATSIYA — KATTA === */
+    .illustration {
+        flex: 1;
+        max-width: 600px;
+        display: none;
+    }
+    .illustration img {
+        width: 100%;
+        height: auto;
+        border-radius: 2.5 lrem;
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
+        transition: all 0.5s ease;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+    }
+    .illustration img:hover {
+        transform: scale(1.04) translateY(-10px);
+        box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* === LOGIN CARD — KATTA === */
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 2.5rem;
+        padding: 3rem;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 35px 70px -15px rgba(99, 102, 241, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b);
+        border-radius: 2.5rem 2.5rem 0 0;
+    }
+    .login-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 45px 85px -15px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-title {
+        font-size: 2.75rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    .brand-subtitle {
+        text-align: center;
+        color: #475569;
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+        font-weight: 500;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+    .form-label i {
+        margin-right: 0.75rem;
+        color: #6366f1;
+        font-size: 1.1rem;
+    }
+
+    .form-input {
+        border-radius: 1.25rem;
+        border: 2px solid #e2e8f0;
+        padding: 1rem 1.25rem;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        background: white;
+        width: 100%;
+    }
+    .form-input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
+        background: white;
+        outline: none;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: white;
+        font-weight: 800;
+        border-radius: 1.5rem;
+        padding: 1.25rem;
+        margin-top: 2rem;
+        transition: all 0.4s;
+        box-shadow: 0 12px 25px rgba(99, 102, 241, 0.35);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        border: none;
+        cursor: pointer;
+        font-size: 1.15rem;
+    }
+    .submit-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 35px rgba(99, 102, 241, 0.45);
+    }
+
+    .error-alert {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #dc2626;
+        border-left: 5px solid #ef4444;
+        padding: 1.25rem;
+        border-radius: 1.25rem;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .footer-links {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.9375rem;
+    }
+    .footer-links a {
+        color: #6366f1;
+        font-weight: 700;
+        transition: all 0.2s;
+    }
+    .footer-links a:hover {
+        color: #4f46e5;
+        text-decoration: underline;
+    }
+
+    /* === RESPONSIVE === */
+    @media (min-width: 992px) {
+        .illustration {
+            display: block;
+        }
+        .login-wrapper {
+            padding: 3rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .login-card { 
+            padding: 2.5rem; 
+            max-width: 100%;
+            border-radius: 2rem;
+        }
+        .brand-title { 
+            font-size: 2.25rem; 
+        }
+        .form-input, .submit-btn {
+            font-size: 1.05rem;
+        }
+        .submit-btn {
+            padding: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .login-bg::before {
+            filter: blur(6px) brightness(0.6);
+        }
+        .login-card { 
+            padding: 2rem; 
+            border-radius: 1.75rem;
+        }
+        .brand-title { 
+            font-size: 2rem; 
+        }
+        .submit-btn {
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-bg">
+    <div class="login-wrapper">
+
+        <!-- KATTA ILLUSTRATSIYA — KOMPYUTERDA -->
+        <div class="illustration">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
+                 alt="Moliyaviy boshqaruv illyustratsiyasi">
+        </div>
+
+        <!-- KATTA LOGIN FORMA -->
+        <div class="login-card">
+            <div class="text-center mb-7">
+                <h1 class="brand-title">
+                    <i class="fas fa-wallet"></i> Hisobim
+                </h1>
+                <p class="brand-subtitle">Moliyangizni boshqaring • Tejang • Rivojlaning</p>
+            </div>
+
+            <form method="post" action="{% url 'login' %}" class="space-y-6">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <div class="error-alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Login yoki parol noto‘g‘ri. Iltimos, qayta urinib ko‘ring.
+                    </div>
+                {% endif %}
+
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                        <i class="fas fa-user"></i> Foydalanuvchi nomi
+                    </label>
+                    {{ form.username }}
+                </div>
+
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> Parol
+                    </label>
+                    {{ form.password }}
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}" />
+
+                <button type="submit" class="submit-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                    Tizimga Kirish
+                </button>
+            </form>
+
+            <div class="footer-links">
+                <p class="text-gray-600">
+                    Yangi foydalanuvchi? 
+                    <a href="{% url 'register' %}">
+                        Ro‘yxatdan o‘tish
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.classList.add('form-input');
+        });
+    });
+</script>
+{% endblock %}
+
+{% block footer %}{% endblock %}

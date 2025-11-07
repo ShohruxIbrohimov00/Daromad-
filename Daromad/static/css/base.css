@@ -1,0 +1,211 @@
+/* ========================================= */
+/* BASE.CSS — Umumiy layout va responsive    */
+/* ========================================= */
+
+.app-container {
+    min-height: 100vh;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+}
+
+/* MOBIL: 0 — 767px */
+@media (max-width: 767px) {
+    .app-container {
+        max-width: 420px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        background: white;
+    }
+}
+
+/* TABLET & DESKTOP: 768px+ */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        background: white;
+    }
+}
+
+/* Status Bar */
+.status-bar {
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.75rem;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    color: #4f46e5;
+}
+
+@media (min-width: 768px) {
+    .status-bar {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* Main */
+main {
+    padding-bottom: 6rem;
+}
+
+.content-wrapper {
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    main {
+        padding-bottom: 5rem;
+    }
+    .content-wrapper {
+        padding: 2rem 3rem;
+    }
+}
+
+/* FOOTER — MOBIL */
+.app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -8px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 767px) {
+    .app-footer {
+        width: 100%;
+        max-width: 420px;
+        border-radius: 1.5rem 1.5rem 0 0;
+    }
+}
+
+/* FOOTER — KOMPYUTER UCHUN KENGAYTIRILGAN */
+@media (min-width: 768px) {
+    .app-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: none;
+        transform: none;
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.1);
+        padding: 1rem 2rem;
+        z-index: 1000;
+    }
+
+    .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        padding: 0.75rem 0;
+        gap: 3rem; /* Tugmalar orasida ko‘proq bo‘sh joy */
+    }
+
+    .footer-nav {
+        display: flex;
+        gap: 3rem; /* Tugmalar orasida katta bo‘sh joy */
+        align-items: center;
+    }
+
+    .nav-link {
+        @apply flex items-center gap-3 px-6 py-4 rounded-2xl transition-all duration-300 text-base font-medium;
+        color: #64748b;
+        text-decoration: none;
+        min-width: 140px;
+        justify-content: center;
+        text-align: center ;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        padding: 0.75rem 1.5rem;
+        border-radius: 1.5rem;
+    }
+
+    .nav-link:hover {
+        background: #f1f5f9;
+        color: #6366f1;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(99, 102, 241, 0.15);
+    }
+
+    .nav-link.active {
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        color: #6366f1;
+        font-weight: 600;
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+    }
+
+    .nav-link i {
+        @apply text-2xl transition-transform duration-300;
+    }
+
+    .nav-link.active i,
+    .nav-link:hover i {
+        transform: scale(1.2);
+    }
+
+    .nav-link span {
+        @apply block;
+    }
+
+    /* FAB — KOMPYUTERDA KATTAROQ */
+    .fab-container {
+        position: static;
+        transform: none;
+    }
+
+    .fab-button {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .fab-button::before {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 100px; height: 100px;
+        background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.5s ease;
+        z-index: -1;
+    }
+
+    .fab-button:hover::before {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .fab-button:hover {
+        transform: translateY(-8px) scale(1.1);
+        box-shadow: 0 20px 45px rgba(99, 102, 241, 0.5);
+    }
+
+    .fab-button i {
+        font-size: 2rem;
+    }
+}
