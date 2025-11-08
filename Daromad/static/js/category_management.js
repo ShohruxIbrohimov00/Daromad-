@@ -2,37 +2,30 @@ let allCategories = [];
 let currentType = 'EXPENSE';
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Parse data
+    // 1. Kategoriyalarni yuklash
     const raw = document.getElementById('category-data')?.dataset.categories || '';
-    const cleaned = raw.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
     try {
-        allCategories = cleaned ? JSON.parse(cleaned) : [];
+        allCategories = raw ? JSON.parse(raw) : [];
     } catch (e) {
         console.error("JSON parse xatosi:", e);
-        document.getElementById('category-list').innerHTML = 
-            `<div class="empty-state">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Kategoriyalarni yuklashda xato yuz berdi.</p>
-            </div>`;
+        showEmptyState("Kategoriyalarni yuklashda xato yuz berdi.");
         return;
     }
 
-    // Tab o‘tish
+    // 2. Tab o‘tish
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
             document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
-            if (btn.dataset.tab === 'list') {
-                renderList();
-            } else if (btn.dataset.tab === 'add') {
-                updateParentOptions(); // Forma ochilganda parent optionlarni yangilash
-            }
+
+            if (btn.dataset.tab === 'list') renderList();
+            if (btn.dataset.tab === 'add') updateParentOptions();
         });
     });
 
-    // Turi o‘zgartirish
+    // 3. Tur o‘zgartirish
     document.querySelectorAll('.type-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             currentType = btn.dataset.type;
@@ -42,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // O‘chirish (fetch)
+    // 4. O‘chirish (AJAX)
     document.getElementById('category-list').addEventListener('click', async (e) => {
         const btn = e.target.closest('.delete-btn');
         if (!btn) return;
@@ -53,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const res = await fetch(`/category/delete/${btn.dataset.id}/`, {
                 method: 'DELETE',
-                headers: { 
-                    'X-CSRFToken': getCsrfToken(),
+                headers: {
+                    'X-CSRFToken': window.csrfToken || getCsrfToken(),
                     'Content-Type': 'application/json'
                 }
             });
@@ -64,74 +57,77 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderList();
                 updateCounts();
             } else {
-                const error = await res.text();
-                alert('O‘chirishda xato: ' + (error || 'Server xatosi'));
+                const err = await res.text();
+                alert('O‘chirishda xato: ' + (err || 'Server xatosi'));
             }
         } catch (err) {
             console.error(err);
-            alert('Tarmoq xatosi. Internet aloqangizni tekshiring.');
+            alert('Internet aloqasi muammosi.');
         }
     });
 
-    // Init
-    renderList();
-    updateCounts();
-
-    // Agar xato yoki muvaffaqiyat xabari bo‘lsa → "Yangi qo‘shish" ga o‘t
-    if (document.querySelector('.msg')) {
-        document.querySelector('[data-tab="add"]').click();
-    }
-
-    // Forma turi o‘zgarganda parent optionlarni yangilash
+    // 5. Forma turi o‘zgarganda
     const typeSelect = document.querySelector('select[name="type"]');
     if (typeSelect) {
         typeSelect.addEventListener('change', updateParentOptions);
-        updateParentOptions(); // Dastlabki holat
+        updateParentOptions();
+    }
+
+    // 6. Dastlabki render
+    renderList();
+    updateCounts();
+
+    // 7. Xabar bo‘lsa → "Yangi qo‘shish" ga o‘t
+    if (document.querySelector('.msg, .alert')) {
+        const addTab = document.querySelector('[data-tab="add"]');
+        addTab && addTab.click();
     }
 });
 
-// Kategoriyalarni render qilish
+// === RENDER LIST ===
 function renderList() {
     const container = document.getElementById('category-list');
     container.innerHTML = '';
 
     const filtered = allCategories.filter(c => c.type === currentType);
     if (!filtered.length) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <p>Bu turda kategoriya yo‘q. Yangi qo‘shing!</p>
-            </div>`;
+        showEmptyState(`Bu turda kategoriya yo‘q. Yangi qo‘shing!`);
         return;
     }
 
-    const parents = filtered.filter(c => !c.parent_id).sort((a, b) => a.name.localeCompare(b.name));
+    const parents = filtered.filter(c => !c.parent_id).sort(byName);
     parents.forEach(parent => {
         container.appendChild(createCard(parent, true));
-        const subs = filtered.filter(c => c.parent_id === parent.id).sort((a, b) => a.name.localeCompare(b.name));
+
+        const subs = filtered.filter(c => c.parent_id === parent.id).sort(byName);
         if (subs.length) {
             const subGrid = document.createElement('div');
-            subGrid.className = 'ml-12 grid grid-cols-1 gap-3 mt-3';
+            subGrid.className = 'ml-6 mt-1 pl-2 border-l-2 border-dashed border-gray-300';
             subs.forEach(sub => subGrid.appendChild(createCard(sub, false)));
             container.appendChild(subGrid);
         }
     });
 }
 
-// Karta yaratish
+// === KARTA YARATISH ===
 function createCard(cat, isParent) {
     const card = document.createElement('div');
     card.className = `category-card ${cat.type.toLowerCase()}-card`;
+
+    const statusBadge = cat.is_active
+        ? ''
+        : '<span class="global-badge bg-gray-200 text-gray-600">Faol</span>';
+
+    const parentBadge = isParent
+        ? '<span class="global-badge">Asosiy</span>'
+        : `<span class="parent-path"><i class="fas fa-level-up-alt"></i> ${escapeHtml(cat.parent_name || 'Noma\'lum')}</span>`;
 
     card.innerHTML = `
         <div class="category-info ${cat.type.toLowerCase()}-info">
             <h3><i class="fas fa-tag"></i> ${escapeHtml(cat.name)}</h3>
             <div class="category-meta">
-                ${isParent 
-                    ? '<span class="global-badge">Asosiy</span>' 
-                    : `<span class="parent-path"><i class="fas fa-level-up-alt"></i> ${escapeHtml(cat.parent_name || 'Noma\'lum')}</span>`
-                }
-                ${cat.is_active ? '' : '<span class="global-badge bg-gray-200 text-gray-600">Faolsiz</span>'}
+                ${isParent ? parentBadge : parentBadge}
+                ${statusBadge}
             </div>
         </div>
         <div class="category-actions">
@@ -145,42 +141,52 @@ function createCard(cat, isParent) {
     return card;
 }
 
-// Sonlarni yangilash
+// === SONLARNI YANGILASH ===
 function updateCounts() {
     const expense = allCategories.filter(c => c.type === 'EXPENSE').length;
     const income = allCategories.filter(c => c.type === 'INCOME').length;
-    document.getElementById('expense-count').textContent = expense;
-    document.getElementById('income-count').textContent = income;
+    const expEl = document.getElementById('expense-count');
+    const incEl = document.getElementById('income-count');
+    if (expEl) expEl.textContent = expense;
+    if (incEl) incEl.textContent = income;
 }
 
-// CSRF token olish
-function getCsrfToken() {
-    return document.querySelector('input[name="csrfmiddlewaretoken"]')?.value || 
-           document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-}
-
-// Xavfsiz HTML
+// === UTILS ===
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-// Parent optionlarni yangilash
+function byName(a, b) {
+    return a.name.localeCompare(b.name, 'uz', { sensitivity: 'base' });
+}
+
+function getCsrfToken() {
+    return document.querySelector('input[name="csrfmiddlewaretoken"]')?.value ||
+           document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+}
+
+function showEmptyState(message) {
+    const container = document.getElementById('category-list');
+    if (!container) return;
+    container.innerHTML = `
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>${escapeHtml(message)}</p>
+        </div>`;
+}
+
+// === PARENT OPTIONS ===
 window.updateParentOptions = function() {
     const type = document.querySelector('select[name="type"]').value;
     const group = document.getElementById('parent-group');
     if (!group) return;
 
-    if (type) {
-        group.style.display = 'block';
-        document.querySelectorAll('.parent-option').forEach(opt => {
-            opt.style.display = 'none';
-        });
-        document.querySelectorAll(`.parent-${type}`).forEach(opt => {
-            opt.style.display = 'block';
-        });
-    } else {
-        group.style.display = 'none';
-    }
+    const options = group.querySelectorAll('.parent-option');
+    options.forEach(opt => {
+        const matches = type && opt.classList.contains(`parent-${type}`);
+        opt.style.display = matches ? 'block' : 'none';
+    });
+    group.style.display = type ? 'block' : 'none';
 };

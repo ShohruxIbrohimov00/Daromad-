@@ -28,16 +28,7 @@
 
     <!-- MA'LUMOTLAR GRID -->
     <div class="info-grid">
-        <div class="info-card">
-            <div class="icon">
-                <i class="fas fa-envelope"></i>
-            </div>
-            <div class="content">
-                <p class="label">Email</p>
-                <p class="value">{{ request.user.email|default:"Yo‘q" }}</p>
-            </div>
-        </div>
-
+        
         {% if request.user.phone %}
         <div class="info-card">
             <div class="icon phone">

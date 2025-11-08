@@ -1,5 +1,5 @@
 from django import template
-from django.db.models import QuerySet # QuerySet'ni ishlatish uchun import qiling
+from django.db.models import QuerySet 
 from decimal import Decimal
 
 register = template.Library()
@@ -63,15 +63,22 @@ def currency(value, currency_symbol=' so\'m'):
 def filter_by_type(queryset, type_name):
     """ 
     Tranzaksiya QuerySet'ini category__type bo'yicha filtrlash uchun.
-    Faqat sahifa birinchi marta yuklanganda ro'yxatni ko'rsatish uchun foydalaniladi.
     """
     if not isinstance(queryset, QuerySet):
-        # QuerySet bo'lmasa, bo'sh ro'yxat qaytarish
         return []
         
-    # 'INCOME' yoki 'EXPENSE' bo'lmasa filtrlashsiz qaytarish
     if type_name not in ['INCOME', 'EXPENSE']:
         return queryset 
         
-    # Kategoriya turi bo'yicha filtrlash
     return queryset.filter(category__type=type_name)
+
+@register.filter
+def filter_display_name(value):
+    """
+    INCOME/EXPENSE kabi qisqa nomlarni to'liq o'zbekcha nomga o'giradi.
+    """
+    if value == 'INCOME':
+        return 'Daromadlar'
+    elif value == 'EXPENSE':
+        return 'Xarajatlar'
+    return value

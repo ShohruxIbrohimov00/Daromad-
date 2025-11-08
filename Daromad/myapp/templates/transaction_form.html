@@ -40,7 +40,7 @@
     .hero-card {
         background: white;
         border-radius: 2.5rem;
-        padding: 2.75rem 3rem;
+        padding: 2rem 1rem;
         text-align: center;
         box-shadow: 0 28px 60px -5px rgba(99, 102, 241, 0.25);
         border: 3px solid #e0e7ff;
@@ -66,7 +66,7 @@
         align-items: center;
         justify-content: center;
         gap: 1rem;
-        line-height: 1;
+        line-height: 1.2;
     }
 
     .hero-card h1 i {
@@ -116,42 +116,75 @@
         font-size: 2.5rem;
     }
 
-    /* Kategoriya kartochkasi */
+    /* ========================================= */
+    /* KATEGORIYA KARTOCHKASI (ULTRA COMPACT)    */
+    /* GRID ICHIDA KO'P SONLI ELEMENTLAR UCHUN    */
+    /* ========================================= */
+
+    /* ========================================= */
+    /* KATEGORIYA KARTOCHKASI (HORIZONTAL COMPACT)*/
+    /* MATN SIG'GANICHA KENGAYADI - TEG USLUBI    */
+    /* ========================================= */
+
     .category-card {
         background: white;
-        border-radius: 1.25rem;
-        padding: 1rem;
-        text-align: center;
+        border-radius: 1rem; /* Biroz kattaroq radius qoldirildi */
+        padding: 0.6rem 0.8rem; /* Oldingidan ixchamroq, gorizontalga mos */
+        text-align: left; /* Matn chapga suriladi */
         cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        min-height: 90px;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        min-height: auto; 
+        
+        /* MUHIM O'ZGARTIRISH: Gorizontal joylashuv */
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-direction: row; /* Ustun emas, qator bo'ladi */
+        justify-content: flex-start; /* Chapdan boshlanadi */
         align-items: center;
+        gap: 0.4rem; /* Ikonka va matn orasidagi oraliq */
+        
+        /* MUHIM O'ZGARTIRISH: Kenglik Matnga bog'liq bo'ladi */
+        width: auto; 
+        flex-grow: 0; /* Cho'zilmaydi */
     }
+
     .category-card:hover {
-        transform: translateY(-6px) scale(1.05);
-        box-shadow: 0 15px 30px rgba(99, 102, 241, 0.2);
+        transform: translateY(-2px) scale(1.01); /* Kichik harakat */
+        box-shadow: 0 8px 15px rgba(99, 102, 241, 0.1);
         z-index: 10;
     }
+
+    /* Tanlangan holat */
     .category-card.selected {
         background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-        border: 2px solid #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3), 0 15px 30px rgba(99, 102, 241, 0.25);
+        border: 1px solid #6366f1; /* Yupqa chegara */
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
     }
+
+    /* Ikonka */
     .category-card i {
-        font-size: 1.75rem;
-        margin-bottom: 0.5rem;
+        font-size: 1rem; /* Ancha kichraytirildi */
+        margin: 0; /* Margin olib tashlandi */
+        color: #6366f1; /* Rangi turli turlarda o'zgartiriladi (JSda bor) */
     }
+
+    /* Matn nomi */
     .category-card span {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #475569;
+        font-size: 0.8rem; /* Oldingi 0.7rem dan biroz kattaroq, aniq ko'rinishi uchun */
+        font-weight: 600; 
+        color: #1e293b;
+        white-space: nowrap; /* Matn bir qatorda qoladi */
     }
+
+    /* Qo'shimcha ikonka (Agar ota kategoriya bo'lsa) */
+    .category-card .fa-angle-right {
+        position: static; /* Absolut emas, oddiy flowda bo'ladi */
+        transform: none;
+        font-size: 0.7rem;
+        color: #475569 !important;
+        margin-left: 0.4rem;
+    }
+
 
     /* Subkategoriyalar */
     #subcategories-panel {
@@ -257,9 +290,9 @@
 
     /* RESPONSIVE — 2–3 QATOR */
     .category-grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(3, 1fr);
+        display: flex; 
+        flex-wrap: wrap; /* Sig'maganlari keyingi qatorga o'tadi */
+        gap: 0.6rem; /* Kartochkalar orasidagi oraliq */
     }
     @media (min-width: 768px) {
         .category-grid { grid-template-columns: repeat(6, 1fr); } /* 2 qator */
@@ -268,10 +301,16 @@
         .category-grid { grid-template-columns: repeat(9, 1fr); } /* 3 qator */
     }
     @media (max-width: 640px) {
-        .category-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-        .category-card { padding: 0.75rem; min-height: 80px; }
-        .category-card i { font-size: 1.5rem; }
-        .category-card span { font-size: 0.75rem; }
+        .category-grid {
+            gap: 0.5rem;
+        }
+        .category-card {
+            padding: 0.5rem 0.7rem; 
+            border-radius: 0.75rem;
+        }
+        .category-card i { font-size: 0.9rem; }
+        .category-card span { font-size: 0.7rem; }
+        .category-card { padding: 0.75rem; min-height: auto; }
         #id_amount_display { font-size: 3rem; }
     }
     @media (max-width: 480px) {
@@ -287,8 +326,7 @@
     <!-- HERO -->
     <div class="hero-card"">
         <h1>
-            <i class="fas fa-plus-circle"> Yangi Tranzaksiya</i>
-            
+            Yangi Tranzaksiya
         </h1>
         <p>Daromad yoki xarajatingizni tez va oson kiriting</p>
     </div>

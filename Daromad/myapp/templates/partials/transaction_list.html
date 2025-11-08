@@ -1,64 +1,66 @@
 {% load custom_filters %}
+{% load static %}
 
 {% if all_transactions %}
-    <div class="space-y-3">
+    <div class="space-y-2 sm:space-y-3">
         {% for transaction in all_transactions %}
             <div class="transaction-card 
-                        {% if transaction.category.type == 'INCOME' %}income-card{% else %}expense-card{% endif %} 
-                        p-4 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 
-                        {% if transaction.category.type == 'INCOME' %}border-green-500{% else %}border-red-500{% endif %} 
-                        bg-white flex justify-between items-center gap-4">
+                         {% if transaction.category.type == 'INCOME' %}income-card{% else %}expense-card{% endif %} 
+                         p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border-l-4 
+                         {% if transaction.category.type == 'INCOME' %}border-green-500{% else %}border-red-500{% endif %} 
+                         bg-white flex justify-between items-center gap-3 cursor-pointer">
                 
-                <!-- Chap qism: Ikon + Ma'lumot -->
-                <div class="flex items-center gap-3 flex-1">
-                    <!-- Kategoriya turi ikonasi -->
-                    <div class="icon-circle w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-md
-                                {% if transaction.category.type == 'INCOME' %}bg-gradient-to-br from-emerald-100 to-green-100 text-emerald-700{% else %}bg-gradient-to-br from-rose-100 to-red-100 text-rose-700{% endif %}">
-                        {{ transaction.category.type|slice:":1" }}
+                <div class="flex items-center gap-2 sm:gap-3 flex-1">
+                    <div class="icon-circle w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm sm:text-base font-bold shadow-sm flex-shrink-0
+                         {% if transaction.category.type == 'INCOME' %}bg-gradient-to-br from-emerald-100 to-green-100 text-emerald-700{% else %}bg-gradient-to-br from-rose-100 to-red-100 text-rose-700{% endif %}">
+                        {% if transaction.category.type == 'INCOME' %}
+                            D
+                        {% else %}
+                            X
+                        {% endif %}
                     </div>
 
-                    <!-- Kategoriya nomi + sana -->
-                    <div class="flex-1">
-                        <p class="font-bold text-gray-800">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-800 text-sm sm:text-base truncate">
                             {% if transaction.category.parent %}
-                                <span class="text-indigo-600">{{ transaction.category.parent.name }}</span>
-                                <span class="text-gray-500">/</span>
+                                <span class="text-indigo-600 font-medium hidden sm:inline">{{ transaction.category.parent.name }}</span>
+                                <span class="text-gray-500 hidden sm:inline">/</span>
                                 <span class="text-gray-900">{{ transaction.category.name }}</span>
                             {% else %}
                                 <span class="text-gray-900">{{ transaction.category.name }}</span>
                             {% endif %}
                         </p>
-                        <p class="text-xs text-gray-500 mt-1 flex items-center gap-2">
-                            <i class="fas fa-calendar-alt"></i> {{ transaction.date|date:"d M, Y" }}
+                        <p class="text-xs text-gray-500 mt-0.5 sm:mt-1 flex items-center gap-1 sm:gap-2">
+                            <i class="fas fa-calendar-alt"></i> {{ transaction.date|date:"d M" }}
                             {% if transaction.account %}
-                                <span class="mx-1">•</span>
-                                <i class="fas fa-wallet"></i> {{ transaction.account.name }}
+                                <span class="mx-0.5">•</span>
+                                <i class="fas fa-wallet text-xs"></i> <span class="truncate max-w-[80px] sm:max-w-none">{{ transaction.account.name }}</span>
                             {% endif %}
                         </p>
                     </div>
                 </div>
 
-                <!-- O'ng qism: Miqdor + Izoh -->
-                <div class="text-right">
-                    <p class="text-2xl font-extrabold 
-                               {% if transaction.category.type == 'INCOME' %}text-emerald-600{% else %}text-rose-600{% endif %}">
+                <div class="text-right flex-shrink-0">
+                    <p class="font-extrabold text-lg sm:text-xl 
+                                     {% if transaction.category.type == 'INCOME' %}text-emerald-600{% else %}text-rose-600{% endif %}">
                         {% if transaction.category.type == 'INCOME' %}+{% else %}–{% endif %}{{ transaction.amount|currency }}
                     </p>
                     {% if transaction.description %}
-                        <p class="text-xs text-gray-400 mt-1 italic max-w-32 truncate">
-                            “{{ transaction.description|truncatechars:20 }}”
+                        <p class="text-[0.65rem] sm:text-xs text-gray-400 mt-0.5 italic max-w-[100px] sm:max-w-32 truncate">
+                            “{{ transaction.description|truncatechars:15 }}”
                         </p>
                     {% else %}
-                        <p class="text-xs text-gray-300 mt-1">Izohsiz</p>
+                        <p class="text-[0.65rem] sm:text-xs text-gray-300 mt-0.5">Izohsiz</p>
                     {% endif %}
                 </div>
             </div>
         {% endfor %}
     </div>
+
 {% else %}
-    <div class="empty-state p-10 text-center bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
-        <i class="fas fa-inbox text-5xl text-gray-300 mb-4 block"></i>
-        <p class="text-lg font-semibold text-gray-600">
+    <div class="empty-state p-6 sm:p-10 text-center bg-gradient-to-b from-gray-50 to-gray-100 rounded-xl sm:rounded-2xl border-2 border-dashed border-gray-300">
+        <i class="fas fa-inbox text-4xl sm:text-5xl text-gray-300 mb-3 sm:mb-4 block"></i>
+        <p class="text-sm sm:text-lg font-semibold text-gray-600">
             {% if request.GET.type == 'INCOME' %}
                 Bu oyda daromad tranzaksiyalari yo‘q
             {% elif request.GET.type == 'EXPENSE' %}
@@ -67,7 +69,7 @@
                 Tanlangan davrda tranzaksiyalar mavjud emas
             {% endif %}
         </p>
-        <p class="text-sm text-gray-500 mt-2">
+        <p class="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
             Yangi tranzaksiya qo‘shish uchun “+” tugmasidan foydalaning
         </p>
     </div>

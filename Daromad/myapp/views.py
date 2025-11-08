@@ -1,7 +1,6 @@
 # myapp/views.py (yoki finances/views.py)
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum,Min,Max
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.core.serializers.json import DjangoJSONEncoder
@@ -20,12 +19,11 @@ from django.template.loader import render_to_string
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from .forms import CustomLoginForm, CustomRegisterForm
 from django.utils import timezone
 from .forms import UserUpdateForm
 from django.db import IntegrityError
-
+from django.db.models import Sum, Max, Min, Q, F, Case, When, IntegerField
 
 # === 1. LOGIN ===
 def user_login(request):
@@ -51,7 +49,6 @@ def user_login(request):
     else:
         form = CustomLoginForm()
     return render(request, 'login.html', {'form': form})
-
 
 def user_register(request):
     if request.user.is_authenticated:
@@ -87,7 +84,6 @@ def user_logout(request):
     messages.info(request, "Muvaffaqiyatli chiqdingiz.")
     return redirect('login')
 
-
 # === 1. PROFIL KO‘RISH (faqat ko‘rish, yuklash yo‘q!) ===
 @login_required
 def update_profile(request):
@@ -112,9 +108,10 @@ def profile_view(request):
         'user': request.user
     })
 
+
 @login_required
 def dashboard_view(request, year=None, month=None):
-    # --- Davrni Aniqlash Mantiqi ---
+    # --- 1. Davrni Aniqlash Mantiqi (O'zgarmadi) ---
     today = date.today()
     
     if year is None or month is None:
@@ -125,18 +122,16 @@ def dashboard_view(request, year=None, month=None):
         except ValueError:
             report_date = today
 
-    # Hisobot Oyining Boshlanishi
     start_of_month = report_date.replace(day=1)
-    
-    # Joriy oyni aniqlash
     is_current_month = report_date.year == today.year and report_date.month == today.month
     
     if is_current_month:
-        end_date = today  # Joriy oyning bugungi kunigacha
+        end_date = today 
     else:
+        # Oyning oxirgi kuni
         end_date = start_of_month + relativedelta(months=1) - relativedelta(days=1)
 
-    # --- Flatpickr uchun chegaralar ---
+    # --- 2. Chegaralar, Tranzaksiyalar (O'zgarmadi) ---
     date_bounds = Transaction.objects.filter(user=request.user).aggregate(
         min_date=Min('date'), 
         max_date=Max('date')
@@ -144,65 +139,92 @@ def dashboard_view(request, year=None, month=None):
     min_available_date = date_bounds['min_date']
     max_available_date = date_bounds['max_date']
 
-    # --- Joriy davr tranzaksiyalari ---
     current_period_transactions = Transaction.objects.filter(
         user=request.user,
         date__gte=start_of_month, 
         date__lte=end_date
     ).select_related('category', 'category__parent')
 
-    # --- Moliyaviy hisob-kitoblar ---
+    # --- 3. Moliyaviy Hisob-kitoblar (O'zgarmadi) ---
     total_income = current_period_transactions.filter(category__type='INCOME').aggregate(total=Sum('amount'))['total'] or 0
     total_expense = current_period_transactions.filter(category__type='EXPENSE').aggregate(total=Sum('amount'))['total'] or 0
     total_net_balance = total_income - total_expense
 
-    # --- O‘tgan oy bilan solishtirish uchun balans ---
+    # --- 4. O‘tgan oy bilan solishtirish (O'zgarmadi) ---
     prev_month_start = start_of_month - relativedelta(months=1)
     prev_month_end = start_of_month - relativedelta(days=1)
 
     prev_income = Transaction.objects.filter(
         user=request.user,
-        date__gte=prev_month_start,
-        date__lte=prev_month_end,
+        date__gte=prev_month_start, date__lte=prev_month_end,
         category__type='INCOME'
     ).aggregate(total=Sum('amount'))['total'] or 0
 
     prev_expense = Transaction.objects.filter(
         user=request.user,
-        date__gte=prev_month_start,
-        date__lte=prev_month_end,
+        date__gte=prev_month_start, date__lte=prev_month_end,
         category__type='EXPENSE'
     ).aggregate(total=Sum('amount'))['total'] or 0
 
     prev_net_balance = prev_income - prev_expense
-    balance_change = total_net_balance - prev_net_balance  # + yoki -
+    balance_change = total_net_balance - prev_net_balance
 
-    # --- Eng ko‘p xarajat kategoriyalari (kompyuter uchun) ---
-    top_expense_categories = Category.objects.filter(
-        user=request.user,
-        type='EXPENSE',  # Category turi
-        transactions__user=request.user,
-        transactions__date__gte=start_of_month,
-        transactions__date__lte=end_date
-    ).annotate(
-        total=Sum('transactions__amount')
-    ).order_by('-total')[:5]
+    
+    # --- 5. Asosiy Kategoriyalar Bo‘yicha Umumiy Tahlil (YANGI MANTIQ) ---
+    
+    # 5.1. Barcha tranzaksiyalarni Ota-kategoriya (yoki o'ziga) bo'yicha guruhlaymiz.
+    # Har bir tranzaksiyaning asosiy kategoriyasini aniqlash uchun Case/When ishlatiladi.
+    
+    main_category_totals_query = current_period_transactions.annotate(
+        # 'main_cat_id' - bu tranzaksiya tegishli bo'lgan eng asosiy (ota) kategoriyaning ID'si.
+        main_cat_id=Case(
+            # Agar kategoriya o'zi ota (parent=None) bo'lsa, o'zining ID'sini ol
+            When(category__parent__isnull=True, then=F('category_id')),
+            # Agar subkategoriya bo'lsa, ota kategoriyaning ID'sini ol
+            default=F('category__parent_id'),
+            output_field=IntegerField()
+        )
+    ).values('main_cat_id').annotate(
+        # Bu ID bo'yicha jami summani hisoblash
+        total=Sum('amount')
+    ).order_by('-total')
 
-    # --- So‘nggi tranzaksiyalar (kompyuter uchun) ---
+    # 5.2. Natijalarni tozalash va kontekstga moslash
+    main_category_totals = []
+    
+    if main_category_totals_query:
+        # Guruhlashdan keyin biz faqat ID va Total summasini olamiz.
+        # Endi biz nom, tur va foydalanuvchini olish uchun Category modelini ishlatishimiz kerak.
+        main_category_ids = [item['main_cat_id'] for item in main_category_totals_query]
+        # Barcha kerakli ota kategoriyalarni bir so'rovda olamiz.
+        main_cats = Category.objects.filter(id__in=main_category_ids).in_bulk(main_category_ids)
+        
+        for item in main_category_totals_query:
+            if item['main_cat_id'] in main_cats:
+                main_cat_obj = main_cats[item['main_cat_id']]
+                
+                main_category_totals.append({
+                    'category__name': main_cat_obj.name,
+                    'category__type': main_cat_obj.type,
+                    'total': item['total'],
+                })
+
+    
+  
+    top_expense_categories = Category.objects.none() 
     recent_transactions = current_period_transactions.order_by('-date', '-created_at')[:5]
 
-    # --- Barcha tranzaksiyalar (ro‘yxat uchun) ---
     all_transactions_list = current_period_transactions.order_by('-date', '-created_at')
 
-    # --- Kontekst ---
+    # --- 7. Kontekst ---
     context = {
         'total_income': total_income,
         'total_expense': total_expense,
         'total_net_balance': total_net_balance,
-        'balance_change': balance_change,  # YANGI
+        'balance_change': balance_change,
 
-        'top_expense_categories': top_expense_categories,  # YANGI
-        'recent_transactions': recent_transactions,        # YANGI
+        'main_category_totals': main_category_totals, # << ENG MUHIMI
+        'recent_transactions': recent_transactions,  # Agar hali ham zarur bo'lsa
 
         'all_transactions': all_transactions_list,
 
@@ -276,7 +298,7 @@ def get_transactions_list_partial(request):
     )
     return HttpResponse(html)
 
-# categories_json xatoga uchrayotganligi sababli, bu funksiyani eng xavfsiz usulda o'zgartiramiz
+
 def get_categories_for_js(user):
     """
     Kategoriyalarni eng xavfsiz JSON formatida tayyorlaydi.
@@ -317,7 +339,6 @@ def get_categories_for_js(user):
     # Bu qismni o'zgarishsiz qoldiramiz, chunki muammo keyingi qadamda
     return json.dumps(categories_list, cls=DjangoJSONEncoder, ensure_ascii=False)
 
-# --- ASOSIY VIEW FUNKSIYASINI TUZATISH ---
 @login_required
 def add_transaction_view(request):
     transaction_type = request.POST.get('transaction_type', request.GET.get('type', 'EXPENSE'))
@@ -516,7 +537,6 @@ def add_category_view(request):
     }
     return render(request, 'category_form.html', context)
 
-
 @login_required
 def recurring_list_view(request):
     today = timezone.localdate()
@@ -543,7 +563,6 @@ def recurring_list_view(request):
         'recurring_expenses': recurring_expenses,
     })
 
-
 @login_required
 def add_recurring_view(request):
     if request.method == 'POST':
@@ -569,6 +588,6 @@ def delete_recurring_view(request, pk):
 def about_view(request):
     return render(request, 'about.html')
 
-# --- 4. Budjetlar View ---
+
 def budget_about(request):
     return render(request, 'budget_about.html')

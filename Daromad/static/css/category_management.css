@@ -1,222 +1,206 @@
-/* ========================================= */
-/* CATEGORY MANAGEMENT — KOMPYUTER + MOBIL  */
-/* 100% Responsive, Professional, Hover     */
-/* ========================================= */
+/* ================================================= */
+/* CATEGORY MANAGEMENT – ULTRA IXCHAM & RESPONSIVE   */
+/* Karta balandligi: 38px (kompyuter), 36px (mobil) */
+/* Hech qanday bo‘sh joy yo‘q, hamma narsa bir qatorda */
+/* ================================================= */
 
 .category-container {
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1.5rem;
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* HERO */
+/* ==================== HERO ==================== */
 .hero-card {
     background: white;
-    border-radius: 2.5rem;
-    padding: 2.75rem 3rem;
+    border-radius: 2rem;
+    padding: 2rem 2.5rem;
     text-align: center;
-    box-shadow: 0 28px 60px -5px rgba(99, 102, 241, 0.25);
-    border: 3px solid #e0e7ff;
-    transition: all 0.4s ease;
-    margin-bottom: 3rem;
+    box-shadow: 0 20px 45px -8px rgba(99, 102, 241, 0.18);
+    border: 2px solid #e0e7ff;
+    transition: all 0.35s ease;
+    margin-bottom: 2.5rem;
 }
 
 .hero-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 38px 75px -5px rgba(99, 102, 241, 0.35);
+    transform: translateY(-6px);
+    box-shadow: 0 28px 55px -8px rgba(99, 102, 241, 0.28);
     border-color: #6366f1;
 }
 
 .hero-card h1 {
-    font-size: 3rem;
-    font-weight: 900;
+    font-size: 1.75rem;
+    font-weight: 800;
     background: linear-gradient(135deg, #6366f1, #4f46e5);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin: 0 0 1rem 0;
+    margin: 0 0 0.75rem 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .hero-card p {
     color: #475569;
     font-weight: 600;
-    font-size: 1.35rem;
+    font-size: 1.1rem;
     margin: 0;
 }
 
-/* TABLAR */
-.main-tabs {
+/* ==================== TABLAR ==================== */
+.main-tabs, .type-tabs {
     display: flex;
     background: white;
-    border-radius: 2rem;
+    border-radius: 1.5rem;
     overflow: hidden;
-    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.12);
-    margin-bottom: 3rem;
-    padding: 0.75rem;
-    border: 2.5px solid #e2e8f0;
+    box-shadow: 0 10px 25px -6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    border: 2px solid #e2e8f0;
 }
 
-.tab-btn {
+.tab-btn, .type-btn {
     flex: 1;
-    padding: 1.35rem 2rem;
+    padding: 0.8rem 1.4rem;
     font-weight: 700;
-    font-size: 1.2rem;
-    border-radius: 1.75rem;
+    font-size: 1rem;
+    border-radius: 1.25rem;
     background: transparent;
     color: #64748b;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
+    gap: 0.5rem;
+    transition: all 0.35s ease;
 }
 
-.tab-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
-    opacity: 0;
-    transition: opacity 0.3s;
+.tab-btn.active, .type-btn.active {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
-
-.tab-btn:hover::before { opacity: 1; }
 
 .tab-btn.active {
     background: linear-gradient(135deg, #6366f1, #4f46e5);
     color: white;
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
 }
 
-/* TYPE TABLARI */
-.type-tabs {
-    display: flex;
-    background: white;
-    border-radius: 1.75rem;
-    overflow: hidden;
-    box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2.5rem;
-    padding: 0.625rem;
-    border: 2.5px solid #e2e8f0;
+.type-btn[data-type="EXPENSE"].active {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
 }
 
-.type-btn {
-    flex: 1;
-    padding: 1.1rem 1.75rem;
-    font-weight: 700;
-    font-size: 1.15rem;
-    border-radius: 1.5rem;
-    background: transparent;
-    color: #64748b;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    transition: all 0.4s ease;
-    position: relative;
+.type-btn[data-type="INCOME"].active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
 }
 
 .type-btn .count {
-    background: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.5);
     color: white;
-    font-size: 0.9375rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    padding: 0.375rem 0.875rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 9999px;
-    margin-left: 0.5rem;
+    margin-left: 0.35rem;
 }
 
-.type-btn.active {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-}
-
-.type-btn[data-type="EXPENSE"].active { 
-    background: linear-gradient(135deg, #ef4444, #dc2626); 
-    color: white;
-}
-.type-btn[data-type="INCOME"].active { 
-    background: linear-gradient(135deg, #10b981, #059669); 
-    color: white;
-}
-
-/* KATEGORIYA GRID */
+/* ==================== KATEGORIYA GRID ==================== */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 2.25rem;
-    min-height: 450px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    padding: 0.5rem 0;
 }
 
-/* KATEGORIYA KARTA */
+/* ==================== KATEGORIYA KARTA – 38px! ==================== */
 .category-card {
     background: white;
-    border-radius: 2rem;
-    padding: 1.75rem;
+    border-radius: 0.75rem;
+    padding: 0.55rem 0.6rem; 
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    border: 2.5px solid #e2e8f0;
-    transition: all 0.4s ease;
+    gap: 0.5rem; /* 0.5rem → 0.35rem */
+    height: 60px; /* QATTIQ BALANDLIK */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1.2px solid #e2e8f0;
+    transition: all 0.25s ease;
     position: relative;
     overflow: hidden;
-}
-
-.category-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 28px 55px rgba(0,0,0,0.16);
-    border-color: #c7d2fe;
+    flex-wrap: nowrap;
 }
 
 .category-card::before {
     content: '';
     position: absolute;
     left: 0; top: 0; bottom: 0;
-    width: 8px;
-    background: linear-gradient(180deg, #6366f1, #4f46e5);
-    border-radius: 0 8px 8px 0;
+    width: 2.5px;
+    background: linear-gradient(180deg, #ef4444, #dc2626);
+    border-radius: 0 2.5px 2.5px 0;
+}
+
+.category-card:hover {
+    transform: translateY(-1.5px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    border-color: #c7d2fe;
 }
 
 .expense-card::before { background: linear-gradient(180deg, #ef4444, #dc2626); }
 .income-card::before { background: linear-gradient(180deg, #10b981, #059669); }
 
+/* INFO – QATTIQ IXCHAM */
+.category-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    line-height: 1.1;
+}
+
 .category-info h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 0 0 0.75rem 0;
+    font-size: 0.8125rem; /* 13px */
+    font-weight: 600;
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.1;
 }
 
 .expense-info h3 { color: #dc2626; }
 .income-info h3 { color: #059669; }
 
 .category-meta {
-    font-size: 0.9375rem;
-    color: #64748b;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    align-items: center;
+    gap: 0.3rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    font-size: 0.625rem; /* 10px */
+    line-height: 1;
+}
+
+.parent-path,
+.global-badge {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75px;
+    font-size: 0.625rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 9999px;
+    line-height: 1;
 }
 
 .parent-path {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
     color: #6366f1;
     font-weight: 600;
 }
@@ -224,84 +208,72 @@
 .global-badge {
     background: #f3f4f6;
     color: #6b7280;
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    white-space: nowrap;
 }
 
+/* ACTIONS – KICHIK TUGMA */
 .category-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-}
-
-.delete-form {
-    display: inline;
+    gap: 0.3rem;
 }
 
 .delete-btn {
     background: #fee2e2;
     color: #dc2626;
-    width: 56px;
-    height: 56px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    font-size: 0.9rem;
     border: none;
     cursor: pointer;
-    font-size: 1.35rem;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.18);
 }
 
 .delete-btn:hover {
     background: #fca5a5;
-    transform: scale(1.18);
-    box-shadow: 0 14px 35px rgba(239, 68, 68, 0.4);
+    transform: scale(1.08);
 }
 
-/* QO‘SHISH FORMA */
+/* ==================== SUBKATEGORIYALAR ==================== */
+.ml-6 { margin-left: 1.25rem; }
+.mt-1 { margin-top: 0.2rem; }
+.pl-2 { padding-left: 0.4rem; }
+.border-l-2 { border-left-width: 1.5px; }
+.border-dashed { border-style: dashed; }
+.border-gray-300 { border-color: #cbd5e1; }
+
+/* ==================== QO‘SHISH FORMA ==================== */
 .add-form-card {
     background: white;
-    border-radius: 2.5rem;
-    padding: 3rem;
-    box-shadow: 0 28px 65px -5px rgba(0, 0, 0, 0.12);
-    border: 3px dashed #c7d2fe;
-    max-width: 900px;
+    border-radius: 2rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 50px -8px rgba(0, 0, 0, 0.1);
+    border: 2.5px dashed #c7d2fe;
+    max-width: 800px;
     margin: 0 auto;
 }
 
 .add-form-card h2 {
-    font-size: 2.25rem;
+    font-size: 1.875rem;
     font-weight: 800;
     color: #6366f1;
     text-align: center;
-    margin: 0 0 2.5rem 0;
+    margin: 0 0 2rem 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.875rem;
+    gap: 0.75rem;
 }
-
-.messages { margin-bottom: 2rem; }
-.msg { 
-    padding: 1.25rem 1.75rem;
-    border-radius: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-    font-size: 1.1rem;
-}
-.msg.success { background: #ecfdf5; color: #059669; border-left: 6px solid #10b981; }
-.msg.error { background: #fef2f2; color: #dc2626; border-left: 6px solid #ef4444; }
 
 .add-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2.25rem;
+    gap: 1.75rem;
 }
 
 .form-group {
@@ -313,38 +285,40 @@
     grid-column: span 2;
     flex-direction: row;
     align-items: center;
-    gap: 1.25rem;
-    font-size: 1.15rem;
+    gap: 1rem;
+    font-size: 1.05rem;
 }
 
 .form-group label {
     font-weight: 700;
     color: #374151;
-    margin-bottom: 0.875rem;
+    margin-bottom: 0.6rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 1.2rem;
+    gap: 0.6rem;
+    font-size: 1.1rem;
 }
 
-.form-group input, .form-group select {
-    padding: 1.1rem 1.35rem;
-    border-radius: 1.75rem;
-    border: 2.5px solid #e2e8f0;
+.form-group input,
+.form-group select {
+    padding: 0.9rem 1.1rem;
+    border-radius: 1.5rem;
+    border: 2px solid #e2e8f0;
     background: white;
-    font-size: 1.15rem;
+    font-size: 1rem;
     transition: all 0.3s;
 }
 
-.form-group input:focus, .form-group select:focus {
+.form-group input:focus,
+.form-group select:focus {
     border-color: #6366f1;
-    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.25);
+    box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
     outline: none;
 }
 
 .form-group input[type="checkbox"] {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     accent-color: #6366f1;
 }
 
@@ -353,96 +327,109 @@
     background: linear-gradient(135deg, #6366f1, #4f46e5);
     color: white;
     font-weight: 800;
-    font-size: 1.35rem;
-    padding: 1.35rem;
-    border-radius: 1.75rem;
+    font-size: 1.2rem;
+    padding: 1.1rem;
+    border-radius: 1.5rem;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.875rem;
-    transition: all 0.4s ease;
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
-    margin-top: 1.5rem;
+    gap: 0.75rem;
+    transition: all 0.35s ease;
+    box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+    margin-top: 1rem;
 }
 
 .submit-btn:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 22px 45px rgba(99, 102, 241, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 38px rgba(99, 102, 241, 0.45);
 }
 
-/* BO‘SH HOLAT */
+/* ==================== BO‘SH HOLAT ==================== */
 .empty-state {
     text-align: center;
-    padding: 5rem 2rem;
+    padding: 4rem 1.5rem;
     color: #94a3b8;
     background: #f8fafc;
-    border-radius: 2rem;
-    border: 3px dashed #cbd5e1;
+    border-radius: 1.5rem;
+    border: 2.5px dashed #cbd5e1;
     grid-column: 1 / -1;
 }
 
 .empty-state i {
-    font-size: 5rem;
+    font-size: 4rem;
     color: #cbd5e1;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .empty-state p {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
-/* PANEL */
+/* ==================== PANEL ANIMATSIYA ==================== */
 .panel { display: none; }
-.panel.active { display: block; animation: fadeIn 0.6s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+.panel.active { 
+    display: block; 
+    animation: fadeIn 0.5s ease; 
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-/* MOBIL — 2 USTUN (Nomi + Turi) */
+/* ==================== MOBIL OPTIMIZATSIYA ==================== */
 @media (max-width: 768px) {
-    .category-container { padding: 1.5rem; }
-    .main-tabs, .type-tabs { flex-direction: column; }
-    .tab-btn, .type-btn { padding: 1.1rem; }
-    .category-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .add-form { 
-        grid-template-columns: 1fr 1fr; /* 2 ustun saqlanadi */
-        gap: 1.5rem;
+    .category-container { padding: 1.25rem; }
+    .hero-card { padding: 1.75rem; border-radius: 1.75rem; }
+    .hero-card h1 { font-size: 1.5rem; gap: 0.6rem; }
+    .hero-card p { font-size: 1rem; }
+    .main-tabs, .type-tabs { flex-direction: column; padding: 0.4rem; }
+    .tab-btn, .type-btn { padding: 0.75rem; font-size: 0.95rem; }
+    .category-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+    .category-card { 
+        height: 60px;
+        padding: 0.35rem 0.55rem; 
+        gap: 0.3rem;
     }
-    .form-group.checkbox,
-    .submit-btn {
-        grid-column: span 2;
+    .category-card::before { width: 2px; }
+    .category-info h3 { font-size: 0.75rem; gap: 0.25rem; }
+    .category-meta { font-size: 0.6rem; gap: 0.25rem; }
+    .global-badge, .parent-path { 
+        font-size: 0.6rem; 
+        padding: 0.1rem 0.35rem; 
+        max-width: 60px;
     }
-    .add-form-card { padding: 2.5rem; }
-    .hero-card h1 { font-size: 2.5rem; }
-    .hero-card p { font-size: 1.2rem; }
-    .add-form-card h2 { font-size: 2rem; }
-    .form-group label { font-size: 1.1rem; }
-    .form-group input, .form-group select { font-size: 1.05rem; padding: 1rem 1.2rem; }
-    .submit-btn { font-size: 1.2rem; padding: 1.2rem; }
-    .category-card { padding: 1.5rem; }
-    .delete-btn { width: 52px; height: 52px; font-size: 1.25rem; }
+    .delete-btn { width: 30px; height: 30px; font-size: 0.85rem; }
+    .add-form { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .form-group.checkbox, .submit-btn { grid-column: span 2; }
+    .add-form-card { padding: 2rem; border-radius: 1.75rem; }
+    .add-form-card h2 { font-size: 1.6rem; }
+    .form-group label { font-size: 1rem; }
+    .form-group input, .form-group select { font-size: 0.95rem; padding: 0.8rem 1rem; }
+    .submit-btn { font-size: 1.1rem; padding: 1rem; }
+    .ml-6 { margin-left: 1rem; }
 }
 
 @media (max-width: 480px) {
     .category-container { padding: 1rem; }
-    .hero-card { padding: 1.75rem; border-radius: 2rem; }
-    .hero-card h1 { font-size: 2.1rem; gap: 0.75rem; }
-    .main-tabs, .type-tabs { padding: 0.5rem; }
-    .tab-btn, .type-btn { font-size: 1.1rem; padding: 1rem; }
-    .add-form { 
-        grid-template-columns: 1fr; /* 1 ustun */
-        gap: 1.5rem;
+    .hero-card { padding: 1.5rem; }
+    .hero-card h1 { font-size: 1.4rem; }
+    .main-tabs, .type-tabs { padding: 0.35rem; }
+    .tab-btn, .type-btn { font-size: 0.9rem; padding: 0.7rem; }
+    .add-form { grid-template-columns: 1fr; gap: 1.25rem; }
+    .form-group.checkbox, .submit-btn { grid-column: span 1; }
+    .add-form-card h2 { font-size: 1.5rem; }
+    .submit-btn { font-size: 1.05rem; }
+    .empty-state { padding: 3rem 1rem; }
+    .empty-state i { font-size: 3.5rem; }
+    .empty-state p { font-size: 1.1rem; }
+    .category-card { 
+        height: 48px;
+        padding: 0.3rem 0.5rem;
     }
-    .form-group.checkbox,
-    .submit-btn {
-        grid-column: span 1;
-    }
-    .add-form-card { padding: 2rem; border-radius: 2rem; }
-    .add-form-card h2 { font-size: 1.875rem; }
-    .form-group label { font-size: 1.05rem; }
-    .submit-btn { font-size: 1.15rem; }
-    .empty-state { padding: 3rem 1.5rem; }
-    .empty-state i { font-size: 4rem; }
-    .empty-state p { font-size: 1.2rem; }
+    .delete-btn { width: 28px; height: 28px; font-size: 0.8rem; }
+    .category-info h3 { font-size: 0.7rem; }
+    .category-meta { font-size: 0.55rem; }
 }

@@ -12,6 +12,7 @@ urlpatterns = [
     path('', dashboard_view, name='dashboard'), 
     path('<int:year>/<int:month>/', dashboard_view, name='dashboard_select_month'),
     path('transactions/list-partial/', get_transactions_list_partial, name='transactions_list_partial'), 
+   
 
     path('profile/about/', about_view, name='about'),
 

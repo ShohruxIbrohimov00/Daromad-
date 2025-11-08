@@ -34,7 +34,7 @@
 
 .avatar-wrapper {
     position: absolute;
-    top: 50%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
@@ -299,7 +299,7 @@
     .profile-container { padding: 1rem; }
     .profile-hero-card { height: 280px; }
     .avatar { width: 120px; height: 120px; font-size: 3.5rem; }
-    .profile-name { font-size: 2rem; }
+    .profile-name { font-size: 1.5rem; }
     .info-grid, .settings-grid { grid-template-columns: 1fr; }
     .logout-btn { padding: 1rem 2rem; font-size: 1.1rem; }
 }
