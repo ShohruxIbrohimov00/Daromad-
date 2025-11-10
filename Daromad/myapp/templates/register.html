@@ -1,14 +1,27 @@
-
 {% load static %}
-
 {% block title %}Ro‘yxatdan o‘tish{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-    /* === BACKGROUND — BLUR + RASMLI === */
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #8b5cf6;
+        --accent: #ec4899;
+        --warning: #f59e0b;
+        --bg: #eef2ff;
+        --card: rgba(255, 255, 255, 0.95);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); }
+
+    /* ANIMATSION GRADIENT FON */
     .register-bg {
         min-height: 100vh;
-        background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #c7d2fe 100%);
+        background: linear-gradient(-45deg, #eef2ff, #e0e7ff, #c7d2fe, #ddd6fe, #c4b5fd);
+        background-size: 400% 400%;
+        animation: gradient 18s ease infinite;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -16,87 +29,71 @@
         position: relative;
         overflow: hidden;
     }
-
-    .register-bg::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-        filter: blur(8px) brightness(0.7);
-        z-index: 1;
-        transform: scale(1.05);
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
 
-    /* === REGISTER WRAPPER === */
-    .register-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    /* YUMALOQ ANIMATSION SHARLAR */
+    .bg-shapes {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.18);
+        filter: blur(45px);
+        animation: float 22s infinite linear;
+    }
+    .shape:nth-child(1) { width: 280px; height: 280px; top: -80px; left: -80px; animation-delay: 0s; }
+    .shape:nth-child(2) { width: 220px; height: 220px; bottom: -60px; right: -60px; animation-delay: 7s; background: rgba(139, 92, 246, 0.22); }
+    .shape:nth-child(3) { width: 300px; height: 300px; top: 40%; left: 60%; animation-delay: 14s; background: rgba(236, 72, 153, 0.18); }
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-35px) rotate(180deg); }
+    }
+
+    /* REGISTER CARD — TELEFON UCHUN OPTIMALLASHTIRILGAN */
+    .register-card {
+        background: var(--card);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        border-radius: 2.5rem;
+        padding: 2.5rem 2rem;
         width: 100%;
-        max-width: 1400px;
-        gap: 4rem;
+        max-width: 460px;
+        box-shadow: 0 28px 65px -12px rgba(99, 102, 241, 0.28);
+        border: 1px solid rgba(255, 255, 255, 0.45);
         position: relative;
         z-index: 10;
-        padding: 2rem;
-    }
-
-    /* === ILLUSTRATSIYA — KATTA === */
-    .illustration {
-        flex: 1;
-        max-width: 600px;
-        display: none;
-    }
-    .illustration img {
-        width: 100%;
-        height: auto;
-        border-radius: 2.5rem;
-        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
-        transition: all 0.5s ease;
-        border: 3px solid rgba(255, 255, 255, 0.2);
-    }
-    .illustration img:hover {
-        transform: scale(1.04) translateY(-10px);
-        box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    /* === REGISTER CARD — KATTA === */
-    .register-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-radius: 2.5rem;
-        padding: 3rem;
-        width: 100%;
-        max-width: 520px;
-        box-shadow: 0 35px 70px -15px rgba(99, 102, 241, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        position: relative;
-        overflow: hidden;
         transition: all 0.4s ease;
     }
     .register-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 8px;
-        background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b);
+        height: 7px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--warning));
         border-radius: 2.5rem 2.5rem 0 0;
     }
     .register-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 45px 85px -15px rgba(99, 102, 241, 0.4);
+        transform: translateY(-10px);
+        box-shadow: 0 38px 85px -12px rgba(99, 102, 241, 0.38);
     }
 
     .brand-title {
-        font-size: 2.75rem;
+        font-size: 2.5rem;
         font-weight: 900;
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        text-align: center;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        text-align: center;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -105,268 +102,229 @@
     .brand-subtitle {
         text-align: center;
         color: #475569;
-        font-size: 1.1rem;
-        margin-bottom: 2.5rem;
+        font-size: 1.02rem;
+        margin-bottom: 2rem;
         font-weight: 500;
     }
 
-    .form-label {
-        font-weight: 700;
-        color: #1e293b;
-        display: flex;
-        align-items: center;
-        margin-bottom: 0.75rem;
-        font-size: 1rem;
-    }
-    .form-label i {
-        margin-right: 0.75rem;
-        color: #6366f1;
-        font-size: 1.1rem;
-    }
-
-    .form-input {
-        border-radius: 1.25rem;
-        border: 2px solid #e2e8f0;
-        padding: 1rem 1.25rem;
-        font-size: 1.1rem;
-        transition: all 0.3s;
-        background: white;
-        width: 100%;
-    }
-    .form-input:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
-        background: white;
-        outline: none;
-    }
-
-    .submit-btn {
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        color: white;
-        font-weight: 800;
-        border-radius: 1.5rem;
-        padding: 1.25rem;
-        margin-top: 2rem;
-        transition: all 0.4s;
-        box-shadow: 0 12px 25px rgba(99, 102, 241, 0.35);
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-        border: none;
-        cursor: pointer;
-        font-size: 1.15rem;
-    }
-    .submit-btn:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 18px 35px rgba(99, 102, 241, 0.45);
-    }
-
-    .error-alert {
-        background: linear-gradient(135deg, #fee2e2, #fecaca);
-        color: #dc2626;
-        border-left: 5px solid #ef4444;
-        padding: 1.25rem;
-        border-radius: 1.25rem;
-        font-weight: 600;
-        font-size: 1rem;
-        margin-bottom: 1.75rem;
-        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .success-alert {
-        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-        color: #059669;
-        border-left: 5px solid #10b981;
-        padding: 1.25rem;
-        border-radius: 1.25rem;
-        font-weight: 600;
-        font-size: 1rem;
-        margin-bottom: 1.75rem;
-        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .footer-links {
-        text-align: center;
-        margin-top: 2rem;
-        font-size: 0.9375rem;
-    }
-    .footer-links a {
-        color: #6366f1;
-        font-weight: 700;
-        transition: all 0.2s;
-    }
-    .footer-links a:hover {
-        color: #4f46e5;
-        text-decoration: underline;
-    }
-
-    /* === GRID FORMA — 2 USTUN === */
+    /* FORMA GRID — TELEFONDA 1 USTUN */
     .form-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1.4rem;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 640px) {
         .form-grid {
             grid-template-columns: 1fr 1fr;
         }
-        .form-grid > :nth-child(3),
-        .form-grid > :nth-child(4),
         .form-grid > :nth-child(5),
         .form-grid > :nth-child(6) {
             grid-column: 1 / -1;
         }
     }
 
-    /* === RESPONSIVE === */
-    @media (min-width: 992px) {
-        .illustration {
-            display: block;
-        }
-        .register-wrapper {
-            padding: 3rem;
-        }
+    .form-group {
+        margin-bottom: 0;
+    }
+    .form-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+    .form-label i { color: var(--primary); }
+
+    .form-input {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 1.5rem;
+        font-size: 1.05rem;
+        background: white;
+        transition: all 0.3s ease;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.18);
+    }
+    .form-input::placeholder {
+        color: #94a3b8;
+    }
+    .help-text {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-top: 0.35rem;
+        margin-left: 0.25rem;
     }
 
-    @media (max-width: 768px) {
-        .register-card { 
-            padding: 2.5rem; 
-            max-width: 100%;
-            border-radius: 2rem;
-        }
-        .brand-title { 
-            font-size: 2.25rem; 
-        }
-        .form-input, .submit-btn {
-            font-size: 1.05rem;
-        }
-        .submit-btn {
-            padding: 1.1rem;
-        }
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        font-weight: 800;
+        font-size: 1.12rem;
+        padding: 1.15rem;
+        border-radius: 1.5rem;
+        border: none;
+        width: 100%;
+        margin-top: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        box-shadow: 0 12px 28px rgba(99, 102, 241, 0.32);
+        transition: all 0.4s ease;
+    }
+    .submit-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 40px rgba(99, 102, 241, 0.42);
     }
 
+    .error-alert, .success-alert {
+        padding: 1rem 1.25rem;
+        border-radius: 1.25rem;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border-left: 5px solid;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    .error-alert {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #dc2626;
+        border-color: #ef4444;
+    }
+    .success-alert {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        color: #059669;
+        border-color: #10b981;
+    }
+
+    .footer-links {
+        text-align: center;
+        margin-top: 1.75rem;
+        font-size: 0.95rem;
+        color: #64748b;
+    }
+    .footer-links a {
+        color: var(--primary);
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .footer-links a:hover {
+        text-decoration: underline;
+    }
+
+    /* TELEFON UCHUN MAXSUS */
     @media (max-width: 480px) {
-        .register-bg::before {
-            filter: blur(6px) brightness(0.6);
+        .register-bg { padding: 0.5rem; }
+        .register-card {
+            padding: 2rem 1.5rem;
+            border-radius: 2rem;
+            max-width: 100%;
         }
-        .register-card { 
-            padding: 2rem; 
-            border-radius: 1.75rem;
-        }
-        .brand-title { 
-            font-size: 2rem; 
-        }
-        .submit-btn {
-            padding: 1rem;
-            font-size: 1.1rem;
-        }
+        .brand-title { font-size: 2.1rem; }
+        .brand-subtitle { font-size: 0.95rem; }
+        .form-input, .submit-btn { font-size: 1rem; }
+        .submit-btn { padding: 1rem; }
+        .shape { filter: blur(35px); }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="register-bg">
-    <div class="register-wrapper">
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
 
-        <!-- KATTA ILLUSTRATSIYA — KOMPYUTERDA -->
-        <div class="illustration">
-            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
-                 alt="Moliyaviy boshqaruv illyustratsiyasi">
+    <div class="register-card">
+        <div class="text-center mb-6">
+            <h1 class="brand-title">
+                <i class="fas fa-user-plus"></i> Yangi Hisob
+            </h1>
+            <p class="brand-subtitle">Moliyangizni boshqarish uchun ro‘yxatdan o‘ting</p>
         </div>
 
-        <!-- KATTA REGISTER FORMA -->
-        <div class="register-card">
-            <div class="text-center mb-7">
-                <h1 class="brand-title">
-                    <i class="fas fa-user-plus"></i> Yangi Hisob
-                </h1>
-                <p class="brand-subtitle">Moliyangizni boshqarish uchun ro‘yxatdan o‘ting</p>
-            </div>
+        <form method="post" action="">
+            {% csrf_token %}
 
-            <form method="post" action="" class="space-y-6">
-                {% csrf_token %}
+            {% if form.errors %}
+                <div class="error-alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Iltimos, barcha maydonlarni to‘g‘ri to‘ldiring.
+                </div>
+            {% endif %}
 
-                {% if form.errors %}
-                    <div class="error-alert">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Iltimos, barcha maydonlarni to‘g‘ri to‘ldiring.
-                    </div>
-                {% endif %}
-
-                <div class="form-grid">
-                    <div>
-                        <label for="{{ form.first_name.id_for_label }}" class="form-label">
-                            <i class="fas fa-user"></i> Ism
-                        </label>
-                        {{ form.first_name }}
-                    </div>
-                    <div>
-                        <label for="{{ form.last_name.id_for_label }}" class="form-label">
-                            <i class="fas fa-user"></i> Familiya
-                        </label>
-                        {{ form.last_name }}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.phone.id_for_label }}" class="form-label">
-                            <i class="fas fa-phone"></i> Telefon raqam
-                        </label>
-                        {{ form.phone }}
-                        <p class="text-xs text-gray-500 mt-1">Masalan: +998901234567</p>
-                    </div>
-
-                    <div>
-                        <label for="{{ form.username.id_for_label }}" class="form-label">
-                            <i class="fas fa-at"></i> Foydalanuvchi nomi
-                        </label>
-                        {{ form.username }}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.password1.id_for_label }}" class="form-label">
-                            <i class="fas fa-lock"></i> Parol
-                        </label>
-                        {{ form.password1 }}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.password2.id_for_label }}" class="form-label">
-                            <i class="fas fa-lock"></i> Parolni tasdiqlash
-                        </label>
-                        {{ form.password2 }}
-                    </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                        <i class="fas fa-user"></i> Ism
+                    </label>
+                    {{ form.first_name }}
                 </div>
 
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-user-plus"></i>
-                    Ro‘yxatdan o‘tish
-                </button>
-            </form>
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                        <i class="fas fa-user"></i> Familiya
+                    </label>
+                    {{ form.last_name }}
+                </div>
 
-            <div class="footer-links">
-                <p class="text-gray-600">
-                    Hisobingiz bormi? 
-                    <a href="{% url 'login' %}">
-                        Tizimga kirish
-                    </a>
-                </p>
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}" class="form-label">
+                        <i class="fas fa-phone"></i> Telefon raqam
+                    </label>
+                    {{ form.phone }}
+                    <p class="help-text">Masalan: +998901234567</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                        <i class="fas fa-at"></i> Foydalanuvchi nomi
+                    </label>
+                    {{ form.username }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> Parol
+                    </label>
+                    {{ form.password1 }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> Parolni tasdiqlash
+                    </label>
+                    {{ form.password2 }}
+                </div>
             </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-user-plus"></i>
+                Ro‘yxatdan o‘tish
+            </button>
+        </form>
+
+        <div class="footer-links">
+            Hisobingiz bormi? 
+            <a href="{% url 'login' %}">Tizimga kirish</a>
         </div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const inputs = document.querySelectorAll('input[type="text"], input[type="password"], input[type="tel"]');
-        inputs.forEach(input => {
+        document.querySelectorAll('input[type="text"], input[type="password"], input[type="tel"]').forEach(input => {
             input.classList.add('form-input');
         });
     });
