@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: daromad
+    name: my-django-app
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python manage.py runserver 0.0.0.0:$PORT"
+    startCommand: "gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT"
