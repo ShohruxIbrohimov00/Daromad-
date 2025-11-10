@@ -1,103 +1,99 @@
-
 {% load static %}
-
 {% block title %}Tizimga Kirish{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-    /* === BACKGROUND === */
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #8b5cf6;
+        --accent: #ec4899;
+        --warning: #f59e0b;
+        --bg: #eef2ff;
+        --card: rgba(255, 255, 255, 0.95);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); }
+
+    /* ANIMATSION GRADIENT FON */
     .login-bg {
         min-height: 100vh;
-        background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #c7d2fe 100%);
+        background: linear-gradient(-45deg, #eef2ff, #e0e7ff, #c7d2fe, #ddd6fe, #c4b5fd);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 1rem;
         position: relative;
         overflow: hidden;
-        border-radius: 1.5rem;
+    }
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
 
-    .login-bg::before {
-        content: '';
+    /* YUMALOQ ANIMATSION SHARLAR */
+    .bg-shapes {
         position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-        filter: blur(8px) brightness(0.7);
-        z-index: 1;
-        transform: scale(1.05);
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.15);
+        filter: blur(40px);
+        animation: float 20s infinite linear;
+    }
+    .shape:nth-child(1) { width: 300px; height: 300px; top: -100px; left: -100px; animation-delay: 0s; }
+    .shape:nth-child(2) { width: 200px; height: 200px; bottom: -50px; right: -50px; animation-delay: 5s; background: rgba(139, 92, 246, 0.2); }
+    .shape:nth-child(3) { width: 250px; height: 250px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 10s; background: rgba(236, 72, 153, 0.15); }
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(180deg); }
     }
 
-    /* === LOGIN WRAPPER === */
-    .login-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    /* LOGIN CARD — TELEFON UCHUN OPTIMALLASHTIRILGAN */
+    .login-card {
+        background: var(--card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 2.5rem;
+        padding: 2.5rem 2rem;
         width: 100%;
-        max-width: 1400px;
-        gap: 4rem;
+        max-width: 420px;
+        box-shadow: 0 25px 60px -12px rgba(99, 102, 241, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.4);
         position: relative;
         z-index: 10;
-        padding: 2rem;
-    }
-
-    /* === ILLUSTRATSIYA — KATTA === */
-    .illustration {
-        flex: 1;
-        max-width: 600px;
-        display: none;
-    }
-    .illustration img {
-        width: 100%;
-        height: auto;
-        border-radius: 2.5 lrem;
-        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
-        transition: all 0.5s ease;
-        border: 3px solid rgba(255, 255, 255, 0.2);
-    }
-    .illustration img:hover {
-        transform: scale(1.04) translateY(-10px);
-        box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    /* === LOGIN CARD — KATTA === */
-    .login-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-radius: 2.5rem;
-        padding: 3rem;
-        width: 100%;
-        max-width: 480px;
-        box-shadow: 0 35px 70px -15px rgba(99, 102, 241, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        position: relative;
-        overflow: hidden;
         transition: all 0.4s ease;
     }
     .login-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 8px;
-        background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f59e0b);
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--warning));
         border-radius: 2.5rem 2.5rem 0 0;
     }
     .login-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 45px 85px -15px rgba(99, 102, 241, 0.4);
+        transform: translateY(-8px);
+        box-shadow: 0 35px 80px -12px rgba(99, 102, 241, 0.35);
     }
 
     .brand-title {
-        font-size: 2.75rem;
+        font-size: 2.4rem;
         font-weight: 900;
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        text-align: center;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        text-align: center;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -106,207 +102,170 @@
     .brand-subtitle {
         text-align: center;
         color: #475569;
-        font-size: 1.1rem;
-        margin-bottom: 2.5rem;
+        font-size: 1rem;
+        margin-bottom: 2rem;
         font-weight: 500;
     }
 
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
     .form-label {
-        font-weight: 700;
-        color: #1e293b;
         display: flex;
         align-items: center;
-        margin-bottom: 0.75rem;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
         font-size: 1rem;
     }
-    .form-label i {
-        margin-right: 0.75rem;
-        color: #6366f1;
-        font-size: 1.1rem;
-    }
+    .form-label i { color: var(--primary); }
 
     .form-input {
-        border-radius: 1.25rem;
-        border: 2px solid #e2e8f0;
-        padding: 1rem 1.25rem;
-        font-size: 1.1rem;
-        transition: all 0.3s;
-        background: white;
         width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 1.5rem;
+        font-size: 1.05rem;
+        background: white;
+        transition: all 0.3s ease;
     }
     .form-input:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
-        background: white;
         outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.15);
+    }
+    .form-input::placeholder {
+        color: #94a3b8;
     }
 
     .submit-btn {
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         color: white;
         font-weight: 800;
+        font-size: 1.1rem;
+        padding: 1.1rem;
         border-radius: 1.5rem;
-        padding: 1.25rem;
-        margin-top: 2rem;
-        transition: all 0.4s;
-        box-shadow: 0 12px 25px rgba(99, 102, 241, 0.35);
+        border: none;
         width: 100%;
+        margin-top: 1rem;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.75rem;
-        border: none;
-        cursor: pointer;
-        font-size: 1.15rem;
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        transition: all 0.4s ease;
     }
     .submit-btn:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 18px 35px rgba(99, 102, 241, 0.45);
+        transform: translateY(-4px);
+        box-shadow: 0 16px 35px rgba(99, 102, 241, 0.4);
     }
 
     .error-alert {
         background: linear-gradient(135deg, #fee2e2, #fecaca);
         color: #dc2626;
-        border-left: 5px solid #ef4444;
-        padding: 1.25rem;
+        padding: 1rem 1.25rem;
         border-radius: 1.25rem;
+        margin-bottom: 1.5rem;
         font-weight: 600;
-        font-size: 1rem;
-        margin-bottom: 1.75rem;
-        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
         display: flex;
         align-items: center;
         gap: 0.75rem;
+        border-left: 5px solid #ef4444;
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
     }
 
     .footer-links {
         text-align: center;
-        margin-top: 2rem;
-        font-size: 0.9375rem;
+        margin-top: 1.75rem;
+        font-size: 0.95rem;
+        color: #64748b;
     }
     .footer-links a {
-        color: #6366f1;
+        color: var(--primary);
         font-weight: 700;
-        transition: all 0.2s;
+        text-decoration: none;
     }
     .footer-links a:hover {
-        color: #4f46e5;
         text-decoration: underline;
     }
 
-    /* === RESPONSIVE === */
-    @media (min-width: 992px) {
-        .illustration {
-            display: block;
-        }
-        .login-wrapper {
-            padding: 3rem;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .login-card { 
-            padding: 2.5rem; 
-            max-width: 100%;
-            border-radius: 2rem;
-        }
-        .brand-title { 
-            font-size: 2.25rem; 
-        }
-        .form-input, .submit-btn {
-            font-size: 1.05rem;
-        }
-        .submit-btn {
-            padding: 1.1rem;
-        }
-    }
-
+    /* TELEFON UCHUN MAXSUS */
     @media (max-width: 480px) {
-        .login-bg::before {
-            filter: blur(6px) brightness(0.6);
+        .login-bg { padding: 0.5rem; }
+        .login-card {
+            padding: 2rem 1.5rem;
+            border-radius: 2rem;
+            max-width: 100%;
         }
-        .login-card { 
-            padding: 2rem; 
-            border-radius: 1.75rem;
-        }
-        .brand-title { 
-            font-size: 2rem; 
-        }
-        .submit-btn {
-            padding: 1rem;
-            font-size: 1.1rem;
-        }
+        .brand-title { font-size: 2rem; }
+        .brand-subtitle { font-size: 0.95rem; }
+        .form-input, .submit-btn { font-size: 1rem; }
+        .submit-btn { padding: 1rem; }
+        .shape { filter: blur(30px); }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="login-bg">
-    <div class="login-wrapper">
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
 
-        <!-- KATTA ILLUSTRATSIYA — KOMPYUTERDA -->
-        <div class="illustration">
-            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
-                 alt="Moliyaviy boshqaruv illyustratsiyasi">
+    <div class="login-card">
+        <div class="text-center mb-6">
+            <h1 class="brand-title">
+                <i class="fas fa-wallet"></i> Hisobim
+            </h1>
+            <p class="brand-subtitle">Moliyangizni boshqaring • Tejang • Rivojlaning</p>
         </div>
 
-        <!-- KATTA LOGIN FORMA -->
-        <div class="login-card">
-            <div class="text-center mb-7">
-                <h1 class="brand-title">
-                    <i class="fas fa-wallet"></i> Hisobim
-                </h1>
-                <p class="brand-subtitle">Moliyangizni boshqaring • Tejang • Rivojlaning</p>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="error-alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Login yoki parol noto‘g‘ri. Iltimos, qayta urinib ko‘ring.
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}" class="form-label">
+                    <i class="fas fa-user"></i> Foydalanuvchi nomi
+                </label>
+                {{ form.username }}
             </div>
 
-            <form method="post" action="{% url 'login' %}" class="space-y-6">
-                {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}" class="form-label">
+                    <i class="fas fa-lock"></i> Parol
+                </label>
+                {{ form.password }}
+            </div>
 
-                {% if form.errors %}
-                    <div class="error-alert">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Login yoki parol noto‘g‘ri. Iltimos, qayta urinib ko‘ring.
-                    </div>
-                {% endif %}
+            <input type="hidden" name="next" value="{{ next }}" />
 
-                <div>
-                    <label for="{{ form.username.id_for_label }}" class="form-label">
-                        <i class="fas fa-user"></i> Foydalanuvchi nomi
-                    </label>
-                    {{ form.username }}
-                </div>
-
-                <div>
-                    <label for="{{ form.password.id_for_label }}" class="form-label">
-                        <i class="fas fa-lock"></i> Parol
-                    </label>
-                    {{ form.password }}
-                </div>
-
-                <input type="hidden" name="next" value="{{ next }}" />
-
-                <button type="submit" class="submit-btn">
+            <button type="submit" class="submit-btn">
                 <i class="fas fa-sign-in-alt"></i>
-                    Tizimga Kirish
-                </button>
-            </form>
+                Tizimga Kirish
+            </button>
+        </form>
 
-            <div class="footer-links">
-                <p class="text-gray-600">
-                    Yangi foydalanuvchi? 
-                    <a href="{% url 'register' %}">
-                        Ro‘yxatdan o‘tish
-                    </a>
-                </p>
-            </div>
+        <div class="footer-links">
+            Yangi foydalanuvchi? 
+            <a href="{% url 'register' %}">Ro‘yxatdan o‘tish</a>
         </div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
-        inputs.forEach(input => {
+        document.querySelectorAll('input[type="text"], input[type="password"]').forEach(input => {
             input.classList.add('form-input');
         });
     });
