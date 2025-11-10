@@ -3,4 +3,6 @@ Pillow
 psycopg2-binary
 dj-database-url
 gunicorn
+python-dateutil
+
 
